@@ -5,7 +5,7 @@ function FrontPage() {
 
 return (
     <div>
-
+        <p>Testi</p>
     </div>
 
     );
