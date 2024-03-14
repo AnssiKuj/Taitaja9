@@ -1,0 +1,94 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    align-items: center;
+  }
+  
+  .frontpage-container {
+    position: absolute;
+    top: 0;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 60%, var(--main-bg) 100%), url("../img/Taitaja9_background.png") no-repeat center top fixed;
+    background-size: contain;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .frontpage-container2 {
+    position: absolute;
+    top: 50%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .header {
+    margin-top: 20px;
+    font-size: 30px;
+  }
+  
+  .links-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .ajanotto-container {
+    margin-top: 10px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .tulospalvelu-container {
+    margin-top: 10px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .ajanotto-container p {
+    color: var(--main-text);
+    font-size: 50px;
+  }
+  
+  .tulospalvelu-container p {
+    color: var(--main-text);
+    font-size: 50px;
+  }
+  
+  @media (max-width: 719px) {
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 50vh;
+      align-items: center;
+    }
+  
+    .frontpage-container {
+      position: absolute;
+      height: 30%;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 60%, var(--main-bg) 100%), url("../img/Taitaja9_background.png") no-repeat center top fixed;
+      background-size: contain;
+      overflow-y: scroll;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  
+    .frontpage-container2 {
+      height: 30%;
+    }
+  
+    .ajanotto-container,
+    .tulospalvelu-container {
+      width: 100%;
+    }
+  }
