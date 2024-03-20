@@ -5,7 +5,7 @@ import "./css/FrontPage.css";
 import "./css/containers.css"
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Timing from './Pages/Timing';
+import AddContestants from './Pages/AddContestants';
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 
 
@@ -16,8 +16,8 @@ const router = createBrowserRouter([
     element: <App/>
   },
   {
-    path: "/Timing",
-    element: <Timing/>
+    path: "/AddContestants",
+    element: <AddContestants/>
   },
 ])
 const root = ReactDOM.createRoot(document.getElementById('root'));

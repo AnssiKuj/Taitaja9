@@ -14,7 +14,7 @@ function FrontPage() {
         </div>
         <div className="links-container">
             <div className="ajanotto-container">
-              <Link to="/Timing" className={`form-page-nav-block ${location.pathname === "/Timing" ? "active" : ""}`}>
+              <Link to="/AddContestants" className={`form-page-nav-block ${location.pathname === "/AddContestants" ? "active" : ""}`}>
                   <p>Ajanotto</p>
               </Link>
             </div>
