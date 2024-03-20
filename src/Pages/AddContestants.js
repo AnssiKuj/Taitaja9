@@ -1,52 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { createConnection } from 'mysql2/promise';
+import React, { useState } from 'react';
+import "../css/contestant-container.css"
 
 function Timing() {
   const [contestants, setContestants] = useState([]);
-  const [connection, setConnection] = useState(null);
 
-  useEffect(() => {
-    const connect = async () => {
-      const conn = await createConnection({
-        host: 'localhost',
-        user: 'your_username',
-        password: 'your_password',
-        database: 'your_database_name'
-      });
-      setConnection(conn);
-    };
-
-    connect();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (connection) {
-        try {
-          const [results] = await connection.execute('SELECT name FROM contestants');
-          setContestants(results.map(row => row.name));
-        } catch (error) {
-          console.error('Error fetching contestants:', error);
-        }
-      }
-    };
-
-    connect();
-    fetchData();
-  }, [connection]);
-
-  const addContestant = async () => {
+  const addContestant = () => {
     if (contestants.length < 36) {
       const contestantName = prompt("Syötä joukkueen nimi:");
       if (contestantName) {
-        if (connection) {
-          try {
-            await connection.execute('INSERT INTO contestants (name) VALUES (?)', [contestantName]);
-            setContestants(prevContestants => [...prevContestants, contestantName]);
-          } catch (error) {
-            console.error('Error adding contestant:', error);
-          }
-        }
+        setContestants(prevContestants => [...prevContestants, contestantName]);
       }
     }
   };
@@ -68,7 +30,7 @@ function Timing() {
   );
 }
 
-export default Timing;
+export default Timing; 
 
 
 
