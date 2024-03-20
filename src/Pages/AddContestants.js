@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../css/contestant-container.css"
 
 function Timing() {
+
+  const [data, setData] = useState([])
+
+  useEffect(()=> {
+    fetch('http://localhost:8081/joukkueet')
+    .then(res => res.json())
+    .then(data => setData(data))
+    .catch(err => console.log(err));
+  }, [])
+
   const [contestants, setContestants] = useState([]);
 
   const addContestant = () => {
@@ -25,7 +35,22 @@ function Timing() {
           ))}
         </div>
       </div>
-      <div className='container2'></div>
+      <div className='container2'>
+            <table>
+              <thead>
+                <th>Nimi</th>
+                <th>Aika</th>
+              </thead>
+              <tbody>
+                {data.map((d ,i) =>(
+                  <tr key={i}>
+                    <td>{d.JoukkueNimi}</td>
+                    <td>{d.JoukkueAika}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+      </div>
     </div>
   );
 }
