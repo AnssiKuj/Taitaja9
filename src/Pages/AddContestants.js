@@ -1,50 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import '../css/contestant-container.css'; // Assuming CSS file for styling
+import { createConnection } from 'mysql2/promise';
 
-function AddContestants() {
+function Timing() {
   const [contestants, setContestants] = useState([]);
+  const [connection, setConnection] = useState(null);
 
   useEffect(() => {
-    const fetchContestants = async () => {
-      try {
-        const response = await fetch('/api/contestants'); // Replace with your endpoint
-        const data = await response.json();
-        setContestants(data);
-      } catch (error) {
-        console.error('Error fetching contestants:', error);
-        // Handle errors (display message to user, etc.)
+    const connect = async () => {
+      const conn = await createConnection({
+        host: 'localhost',
+        user: 'your_username',
+        password: 'your_password',
+        database: 'your_database_name'
+      });
+      setConnection(conn);
+    };
+
+    connect();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (connection) {
+        try {
+          const [results] = await connection.execute('SELECT name FROM contestants');
+          setContestants(results.map(row => row.name));
+        } catch (error) {
+          console.error('Error fetching contestants:', error);
+        }
       }
     };
 
-    fetchContestants();
-  }, []);
+    connect();
+    fetchData();
+  }, [connection]);
 
-  const addContestant = async (name) => {
-    try {
-      const response = await fetch('/api/contestants', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }) // Send contestant data (name)
-      });
-
-      const data = await response.json();
-      console.log('Server response:', data); // Check response from server
-
-      // Potentially update local state or UI based on response (optional)
-    } catch (error) {
-      console.error('Error adding contestant:', error);
-      alert('Failed to add contestant!'); // Handle error for user
+  const addContestant = async () => {
+    if (contestants.length < 36) {
+      const contestantName = prompt("Syötä joukkueen nimi:");
+      if (contestantName) {
+        if (connection) {
+          try {
+            await connection.execute('INSERT INTO contestants (name) VALUES (?)', [contestantName]);
+            setContestants(prevContestants => [...prevContestants, contestantName]);
+          } catch (error) {
+            console.error('Error adding contestant:', error);
+          }
+        }
+      }
     }
   };
 
   return (
     <div className='container'>
       <div className='container1'>
-        <h2 className="header" onClick={() => addContestant('{/* Prompt for name here */}')}>Lisää kilpailija</h2>  {/* Replace with prompt */}
+        <h2 className="header" onClick={addContestant}>Lisää kilpailija</h2>
         <div className="kilpailija-container">
           {contestants.map((contestant, index) => (
             <div key={index} className="kilpailija-item">
-              {contestant.name}  // Assuming name property in contestant object
+              {contestant}
             </div>
           ))}
         </div>
@@ -54,7 +68,8 @@ function AddContestants() {
   );
 }
 
-export default AddContestants;
+export default Timing;
+
 
 
 
