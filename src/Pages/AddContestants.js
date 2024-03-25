@@ -71,7 +71,6 @@ function Timing() {
         </div>
       </div>
       <div className='container2'>
-        {/* ... your content for container2 */}
       </div>
     </div>
   );

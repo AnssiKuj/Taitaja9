@@ -34,7 +34,7 @@ app.post('/addContestant', (req, res) => {
   }
 
   // Construct SQL query for insertion
-  const sql = "INSERT INTO joukkueet (JoukkueNimi) VALUES (?)";
+  const sql = "INSERT INTO joukkueet (JoukkueNimi, JoukkueAika) VALUES (?, ?)";
 
   // Execute query with prepared statement to prevent SQL injection
   db.query(sql, [contestantName], (err, result) => {
