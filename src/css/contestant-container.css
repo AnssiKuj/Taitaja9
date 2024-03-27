@@ -6,4 +6,10 @@
   
   .kilpailija-item {
     text-align: center;
+    color: var(--main-text);
+  }
+
+  a{
+    text-align: center;
+    color: var(--main-text);
   }

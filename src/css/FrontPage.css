@@ -46,11 +46,9 @@
     color: var(--main-text);
     font-size: 50px;
   }
-  .ajanotto-container a,
-  .tulospalvelu-container a {
+  a{
     text-decoration: none;
   }
-  
   @media (max-width: 719px) {
     .container {
       display: flex;

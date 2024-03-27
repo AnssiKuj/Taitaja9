@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import "../css/contestant-container.css"
 
 function Timing() {
+  const [data, setData] = useState([]);
 
-  // Tallentaa kilpailijoiden tiedot
-  const [data, setData] = useState([])
-
-  useEffect(()=> {
-    // Haetaan kilpailijoiden tiedot palvelimelta
+  useEffect(() => {
     fetch('http://localhost:8081/joukkueet')
-    .then(res => res.json())
-    .then(data => setData(data))
-    .catch(err => console.log(err));
-  }, [])
-
+      .then(res => res.json())
+      .then(data => setData(data))
+      .catch(err => console.log(err));
+  }, []);
 
   const [contestants, setContestants] = useState([]);
+  const location = useLocation();
 
-  // Funktio, joka lisää uuden kilpailijan tietokantaan
   const addContestant = () => {
     if (contestants.length < 36) {
       const contestantName = prompt("Syötä joukkueen nimi:");
@@ -29,38 +26,37 @@ function Timing() {
           },
           body: JSON.stringify({ JoukkueNimi: contestantName }),
         })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          // Päivittää listan kilpailijoista
-          return fetch('http://localhost:8081/joukkueet');
-        })
-        .then(res => res.json())
-        .then(data => {
-          // Päivitetään data
-          setData(data);
-        })
-        .catch(error => {
-          console.error('Virhelisätessä kilpailijaa', error);
-          alert('Virhe lisätessä kilpailijaa.');
-        });
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return fetch('http://localhost:8081/joukkueet');
+          })
+          .then(res => res.json())
+          .then(data => {
+            setData(data);
+          })
+          .catch(error => {
+            console.error('Virhelisätessä kilpailijaa', error);
+            alert('Virhe lisätessä kilpailijaa.');
+          });
       }
     }
   };
-  
 
   return (
     <div className='container'>
       <div className='container1'>
-        {/* Lisää kilpaili clikkaamalla otsikkoa */}
         <h2 className="header" onClick={addContestant}>Lisää kilpailija</h2>
         <div className="kilpailija-container">
-          {/* Kilpailijoiden tiedot */}
           {data.map((d, i) => (
-            <div key={i} className="kilpailija-item">
+            <Link
+              key={i}
+              to={`/Joukkue${i + 1}`} // Luo dynaamiset reitit kilpailijoille
+              className={`kilpailija-item${location.pathname === `/Joukkue${i + 1}` ? "active" : ""}`}
+            >
               {d.JoukkueNimi}
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -70,7 +66,8 @@ function Timing() {
   );
 }
 
-export default Timing; 
+export default Timing;
+
 
 
 
