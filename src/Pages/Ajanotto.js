@@ -102,7 +102,6 @@ function Ajanotto() {
       <button onClick={handleSaveTime}>Tallenna</button>
       <button onClick={handleResetTimer}>Reset</button>
       <div>
-        {/* Näytetään ajastimen arvo */}
         <h2>Ajanotto: {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}:{centiseconds < 10 ? `0${centiseconds}` : centiseconds}</h2>
       </div>
     </div>

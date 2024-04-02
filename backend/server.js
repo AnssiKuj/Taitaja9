@@ -21,7 +21,7 @@ db.connect((err) => {
     console.error("Virhe tietokantaan yhdistettäessä: " + err.stack);
     return;
   }
-  console.log("Tietokantaan yhdistetty, id " + db.threadId);
+  console.log("Tietokantaan yhdistetty");
 });
 
 app.get('/', (req, res) => {
