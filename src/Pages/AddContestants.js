@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/contestant-container.css"
 
-function Timing() {
+function AddContestants() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ function Timing() {
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.log(err));
-  }, []);
+  });
 
   const [contestants, setContestants] = useState([]);
   const location = useLocation();
@@ -52,8 +52,8 @@ function Timing() {
           {data.map((d, i) => (
             <Link
               key={i}
-              to={`/Joukkue${i + 1}`} // Luo dynaamiset reitit kilpailijoille
-              className={`kilpailija-item${location.pathname === `/Joukkue${i + 1}` ? "active" : ""}`}
+              to={`/Ajanotto`}
+              className={`kilpailija-item${location.pathname === `/Ajanotto` ? "active" : ""}`}
             >
               {d.JoukkueNimi}
             </Link>
@@ -66,7 +66,7 @@ function Timing() {
   );
 }
 
-export default Timing;
+export default AddContestants;
 
 
 

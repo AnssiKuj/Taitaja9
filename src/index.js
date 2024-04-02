@@ -6,9 +6,9 @@ import "./css/containers.css"
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AddContestants from './Pages/AddContestants';
-import { createBrowserRouter, RouterProvider} from 'react-router-dom';
-import Joukkue1 from './Pages/Joukkue1';
-import Joukkue2 from './Pages/Joukkue2';
+import { createBrowserRouter, RouterProvider, BrowserRouter} from 'react-router-dom';
+import Ajanotto from './Pages/Ajanotto';
+
 
 
 
@@ -22,12 +22,8 @@ const router = createBrowserRouter([
     element: <AddContestants/>
   },
   {
-    path: "/Joukkue1",
-    element: <Joukkue1/>
-  },
-  {
-    path: "/Joukkue2",
-    element: <Joukkue2/>
+    path: "/Ajanotto",
+    element: <Ajanotto/>
   },
   ])
 const root = ReactDOM.createRoot(document.getElementById('root'));
