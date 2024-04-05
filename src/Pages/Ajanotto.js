@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import '../css/ajanotto.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay, faStop, faSave, faUndo } from '@fortawesome/free-solid-svg-icons';
+
 
 function Ajanotto() {
   const [teams, setTeams] = useState([]);
-  const [tasks, setTasks] = useState(['tehtava1', 'tehtava2', 'tehtava3']); // Lisää tehtävät tähän
+  const [tasks, setTasks] = useState(['tehtava1', 'tehtava2', 'tehtava3']);
   const [selectedTeam, setSelectedTeam] = useState('');
   const [selectedTask, setSelectedTask] = useState('');
   const [minutes, setMinutes] = useState(0);
@@ -15,9 +19,9 @@ function Ajanotto() {
   }, []);
 
   useEffect(() => {
-    // Nollaa ajastimen, kun valittua joukkuetta vaihdetaan
+    // Nollaa ajastimen, kun joukkuetta tai tehtävää vaihdetaan
     handleResetTimer();
-  }, [selectedTeam]);
+  }, [selectedTeam, selectedTask]);
 
   const fetchTeams = () => {
     fetch('http://localhost:8081/joukkueet')
@@ -48,13 +52,13 @@ function Ajanotto() {
 
   const handleSaveTime = () => {
     const aika = `${minutes}:${seconds}:${centiseconds}`;
-    // Muuta tallennus tehtäväkohtaiseksi
+    //Tallenna aika tehtävä kohtaisesti
     fetch('http://localhost:8081/saveTime', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ joukkueNimi: selectedTeam, tehtava: selectedTask, aika: aika }), // Lisää valittu tehtävä
+      body: JSON.stringify({ joukkueNimi: selectedTeam, tehtava: selectedTask, aika: aika }), // Lisää valittu Joukkue ja tehtävä
     })
       .then(response => {
         if (!response.ok) {
@@ -96,33 +100,44 @@ function Ajanotto() {
   }, [isTimerRunning]);
 
   return (
-    <div>
-      <h1>Valitse joukkue:</h1>
-      <select value={selectedTeam} onChange={handleTeamSelect}>
-        <option value="">Valitse joukkue</option>
-        {teams.map((team, index) => (
-          <option key={index} value={team.JoukkueNimi}>{team.JoukkueNimi}</option>
-        ))}
-      </select>
-      <h1>Valitse tehtävä:</h1>
-      <select value={selectedTask} onChange={handleTaskSelect}>
-        <option value="">Valitse tehtävä</option>
-        {tasks.map((task, index) => (
-          <option key={index} value={task}>{task}</option>
-        ))}
-      </select>
-      <button onClick={handleStartTimer}>Aloita ajanotto</button>
-      <button onClick={handleStopTimer}>Pysäytä ajanotto</button>
-      <button onClick={handleSaveTime}>Tallenna</button>
-      <button onClick={handleResetTimer}>Reset</button>
-      <div>
-        <h2>Ajanotto: {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}:{centiseconds < 10 ? `0${centiseconds}` : centiseconds}</h2>
+    <div className='container'>
+      <div className='container1'>
+        <h1>Valitse joukkue ja tehtävä</h1>
+        <select className='select' value={selectedTeam} onChange={handleTeamSelect}>
+          <option value="">Valitse joukkue</option>
+          {teams.map((team, index) => (
+            <option key={index} value={team.JoukkueNimi}>{team.JoukkueNimi}</option>
+          ))}
+        </select>
+        <select className='select' value={selectedTask} onChange={handleTaskSelect}>
+          <option value="">Valitse tehtävä</option>
+          {tasks.map((task, index) => (
+            <option key={index} value={task}>{task}</option>
+          ))}
+        </select>
+        <div className='timer'>
+          <h2>{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}:{centiseconds < 10 ? `0${centiseconds}` : centiseconds}</h2>
+        </div>
+        <button className='button1' onClick={handleStartTimer}>
+        <FontAwesomeIcon icon={faPlay} />
+        </button>
+          <button className='button' onClick={handleStopTimer}>
+        <FontAwesomeIcon icon={faStop} />
+        </button>
+        <button className='button' onClick={handleSaveTime}>
+          <FontAwesomeIcon icon={faSave} />
+        </button>
+        <button className='button4' onClick={handleResetTimer}>
+          <FontAwesomeIcon icon={faUndo} />
+        </button>
       </div>
     </div>
   );
 }
 
 export default Ajanotto;
+
+
 
 
 
