@@ -6,7 +6,7 @@ import { faPlay, faStop, faSave, faUndo } from '@fortawesome/free-solid-svg-icon
 
 function Ajanotto() {
   const [teams, setTeams] = useState([]);
-  const [tasks, setTasks] = useState(['Tehtävä 1', 'Tehtävä 2', 'Tehtävä 3']); // Muutettu tehtävien nimet
+  const [tasks, setTasks] = useState(['tehtava1', 'tehtava2', 'tehtava3']);
   const [selectedTeam, setSelectedTeam] = useState('');
   const [selectedTask, setSelectedTask] = useState('');
   const [minutes, setMinutes] = useState(0);
@@ -136,7 +136,6 @@ function Ajanotto() {
 }
 
 export default Ajanotto;
-
 
 
 

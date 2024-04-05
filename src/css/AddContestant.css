@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    align-items: center;
+    position: relative;
+  }
+  
+  .container1 {
+    position: absolute;
+    top: 0;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+  
+  }
+  
+  .container2 {
+    position: absolute;
+    top: 0;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .container2 h2{
+    margin-right: 50px;
+    margin-left: 50px;
+  }
+  
+  .delete-button {
+    margin-left: 5px;
+    background-color: transparent;
+    color: var(--main-text);
+    border: none;
+    cursor: pointer;
+  }
+  
+  .navbutton-container{
+    position: absolute;
+    top: 50%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .navbutton-container h2{
+    margin-left: 50px;
+    margin-right: 50px;
+  }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 02.04.2024 klo 14:29
+-- Generation Time: 05.04.2024 klo 15:51
 -- Palvelimen versio: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -28,30 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `joukkueet` (
-  `JoukkueID` int(11) NOT NULL,
   `JoukkueNimi` varchar(255) NOT NULL,
-  `JoukkueAika` varchar(255) NOT NULL
+  `tehtava1` varchar(255) NOT NULL,
+  `tehtava2` varchar(255) NOT NULL,
+  `tehtava3` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `joukkueet`
---
-ALTER TABLE `joukkueet`
-  ADD PRIMARY KEY (`JoukkueID`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `joukkueet`
---
-ALTER TABLE `joukkueet`
-  MODIFY `JoukkueID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

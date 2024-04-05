@@ -51,6 +51,20 @@ app.post('/insertContestant', (req, res) => {
   });
 });
 
+// Poistetaan joukkue tietokannasta
+app.delete('/deleteContestant/:JoukkueNimi', (req, res) => {
+  const JoukkueNimi = req.params.JoukkueNimi;
+  const sql = "DELETE FROM joukkueet WHERE JoukkueNimi = ?";
+  db.query(sql, [JoukkueNimi], (err, result) => {
+    if (err) {
+      console.error("Virhe poistettaessa joukkuetta", err);
+      return res.status(500).json({ error: "Virhe poistettaessa joukkuetta" });
+    }
+    console.log("Joukkue poistettu onnistuneesti");
+    return res.status(200).json({ message: "Joukkue poistettu onnistuneesti" });
+  });
+});
+
 // Tallennetaan aika tietokantaan
 app.post('/saveTime', (req, res) => {
   const { joukkueNimi, tehtava, aika } = req.body;
@@ -68,4 +82,5 @@ app.post('/saveTime', (req, res) => {
 app.listen(8081, () => {
   console.log("Palvelin käynnistetty portissa 8081");
 });
+
 

@@ -35,7 +35,15 @@
   flex-direction: row;
   justify-content: center;
 }
-.navbutton-container p{
+.navbutton-container h2{
   margin-right: 50px;
   margin-left: 50px;
 }
+
+.delete-button {
+  background-color: transparent; /* Taustaväri */
+  color: var(--main-text);
+  border: none;
+  cursor: pointer;
+}
+

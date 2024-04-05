@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/contestant-container.css"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons'; // Lisätty faTimes rasti-ikonia varten
 
 function AddContestants() {
   const [data, setData] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
     fetch('http://localhost:8081/joukkueet')
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.log(err));
-  });
-
-  const [contestants, setContestants] = useState([]);
-  const location = useLocation();
+  }, [data]); // Muutettu lisäämään riippuvuus datasta
 
   const addContestant = () => {
     if (data.length < 36) {
@@ -30,23 +30,36 @@ function AddContestants() {
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
-            // Fetch the updated list of contestants after adding a new one
-            return fetch('http://localhost:8081/joukkueet');
-          })
-          .then(res => res.json())
-          .then(data => {
-            // Update the contestants state
-            setData(data);
-            setContestants(data); // Update the contestants state here
+            console.log('Kilpailija lisätty onnistuneesti');
+            setData([...data, { JoukkueNimi: contestantName }]); // Päivitetty lisäämään uusi joukkue suoraan frontendin tilaan
           })
           .catch(error => {
-            console.error('Virhelisätessä kilpailijaa', error);
-            alert('Virhe lisätessä kilpailijaa.');
+            console.error('Virhe lisättäessä kilpailijaa', error);
+            alert('Virhe lisättäessä kilpailijaa.');
           });
       }
     } else {
-      alert('Maximum number of contestants reached.');
+      alert('Maksimimäärä kilpailijoita saavutettu.');
     }
+  };
+
+  const deleteContestant = (joukkueNimi) => {
+    fetch(`http://localhost:8081/deleteContestant/${joukkueNimi}`, {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log('Joukkue poistettu onnistuneesti');
+        // Päivitetään data poistetun joukkueen jälkeen
+        const updatedData = data.filter(item => item.JoukkueNimi !== joukkueNimi);
+        setData(updatedData);
+      })
+      .catch(error => {
+        console.error('Virhe poistettaessa joukkuetta', error);
+        alert('Virhe poistettaessa joukkuetta.');
+      });
   };
 
   return (
@@ -60,19 +73,19 @@ function AddContestants() {
               className={`kilpailija-item`}
             >
               {d.JoukkueNimi}
+              <button className="delete-button" onClick={() => deleteContestant(d.JoukkueNimi)}>
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
             </div>
           ))}
         </div>
       </div>
-      <div className='container2'>
-        <h2 className="header">Lisää tehtävä</h2>
-      </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
-          <p>Edellinen</p>
+          <h2>Edellinen</h2>
         </Link>
         <Link to="/Ajanotto" className={`${location.pathname === "/Ajanotto" ? "active" : ""}`}>
-          <p>Seuraava</p>
+          <h2>Seuraava</h2>
         </Link>
       </div>
     </div>
@@ -80,6 +93,8 @@ function AddContestants() {
 }
 
 export default AddContestants;
+
+
 
 
 
