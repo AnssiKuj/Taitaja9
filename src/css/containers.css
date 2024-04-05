@@ -1,25 +1,41 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    align-items: center;
-  }
-  
-  .container1 {
-    position: absolute;
-    top: 0;
-    bottom: 50%;
-    left: 0;
-    right: 0;
-  }
-  
-  .container2 {
-    position: absolute;
-    top: 50%;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  position: relative;
+}
+
+.container1 {
+  position: absolute;
+  top: 0;
+  bottom: 66.6%;
+  left: 0;
+  right: 0;
+}
+
+.container2 {
+  position: absolute;
+  top: 50%;
+  bottom: 33.3%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navbutton-container {
+  position: absolute;
+  top: 90%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.navbutton-container p{
+  margin-right: 50px;
+  margin-left: 50px;
+}

@@ -53,8 +53,8 @@ app.post('/insertContestant', (req, res) => {
 
 // Tallennetaan aika tietokantaan
 app.post('/saveTime', (req, res) => {
-  const { joukkueNimi, tehtava, aika } = req.body;
-  const sql = `UPDATE joukkueet SET ${tehtava} = ? WHERE JoukkueNimi = ?`;
+  const { joukkueNimi, aika } = req.body;
+  const sql = "UPDATE joukkueet SET JoukkueAika = ? WHERE JoukkueNimi = ?";
   db.query(sql, [aika, joukkueNimi], (err, result) => {
     if (err) {
       console.error("Virhe tallentaessa aikaa", err);

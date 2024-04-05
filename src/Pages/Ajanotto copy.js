@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 function Ajanotto() {
   const [teams, setTeams] = useState([]);
-  const [tasks, setTasks] = useState(['tehtava1', 'tehtava2', 'tehtava3']); // Lisää tehtävät tähän
   const [selectedTeam, setSelectedTeam] = useState('');
-  const [selectedTask, setSelectedTask] = useState('');
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [centiseconds, setCentiseconds] = useState(0);
@@ -30,15 +28,11 @@ function Ajanotto() {
     setSelectedTeam(event.target.value);
   };
 
-  const handleTaskSelect = (event) => {
-    setSelectedTask(event.target.value);
-  };
-
   const handleStartTimer = () => {
-    if (selectedTeam && selectedTask) {
+    if (selectedTeam) {
       setIsTimerRunning(true);
     } else {
-      alert('Valitse ensin joukkue ja tehtävä aloittaaksesi ajanoton.');
+      alert('Valitse ensin joukkue aloittaaksesi ajanoton.');
     }
   };
 
@@ -48,13 +42,12 @@ function Ajanotto() {
 
   const handleSaveTime = () => {
     const aika = `${minutes}:${seconds}:${centiseconds}`;
-    // Muuta tallennus tehtäväkohtaiseksi
     fetch('http://localhost:8081/saveTime', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ joukkueNimi: selectedTeam, tehtava: selectedTask, aika: aika }), // Lisää valittu tehtävä
+      body: JSON.stringify({ joukkueNimi: selectedTeam, aika: aika }),
     })
       .then(response => {
         if (!response.ok) {
@@ -104,13 +97,6 @@ function Ajanotto() {
           <option key={index} value={team.JoukkueNimi}>{team.JoukkueNimi}</option>
         ))}
       </select>
-      <h1>Valitse tehtävä:</h1>
-      <select value={selectedTask} onChange={handleTaskSelect}>
-        <option value="">Valitse tehtävä</option>
-        {tasks.map((task, index) => (
-          <option key={index} value={task}>{task}</option>
-        ))}
-      </select>
       <button onClick={handleStartTimer}>Aloita ajanotto</button>
       <button onClick={handleStopTimer}>Pysäytä ajanotto</button>
       <button onClick={handleSaveTime}>Tallenna</button>
@@ -123,7 +109,6 @@ function Ajanotto() {
 }
 
 export default Ajanotto;
-
 
 
 

@@ -16,7 +16,7 @@ function AddContestants() {
   const location = useLocation();
 
   const addContestant = () => {
-    if (contestants.length < 36) {
+    if (data.length < 36) {
       const contestantName = prompt("Syötä joukkueen nimi:");
       if (contestantName) {
         fetch('http://localhost:8081/insertContestant', {
@@ -30,17 +30,22 @@ function AddContestants() {
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
+            // Fetch the updated list of contestants after adding a new one
             return fetch('http://localhost:8081/joukkueet');
           })
           .then(res => res.json())
           .then(data => {
+            // Update the contestants state
             setData(data);
+            setContestants(data); // Update the contestants state here
           })
           .catch(error => {
             console.error('Virhelisätessä kilpailijaa', error);
             alert('Virhe lisätessä kilpailijaa.');
           });
       }
+    } else {
+      alert('Maximum number of contestants reached.');
     }
   };
 
@@ -50,17 +55,25 @@ function AddContestants() {
         <h2 className="header" onClick={addContestant}>Lisää kilpailija</h2>
         <div className="kilpailija-container">
           {data.map((d, i) => (
-            <Link
+            <div
               key={i}
-              to={`/Ajanotto`}
-              className={`kilpailija-item${location.pathname === `/Ajanotto` ? "active" : ""}`}
+              className={`kilpailija-item`}
             >
               {d.JoukkueNimi}
-            </Link>
+            </div>
           ))}
         </div>
       </div>
       <div className='container2'>
+        <h2 className="header">Lisää tehtävä</h2>
+      </div>
+      <div className="navbutton-container">
+        <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
+          <p>Edellinen</p>
+        </Link>
+        <Link to="/Ajanotto" className={`${location.pathname === "/Ajanotto" ? "active" : ""}`}>
+          <p>Seuraava</p>
+        </Link>
       </div>
     </div>
   );
