@@ -9,9 +9,8 @@ function Ajanotto() {
   const [tasks, setTasks] = useState(['Tehtävä 1', 'Tehtävä 2', 'Tehtävä 3']); // Muutettu tehtävien nimet
   const [selectedTeam, setSelectedTeam] = useState('');
   const [selectedTask, setSelectedTask] = useState('');
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [centiseconds, setCentiseconds] = useState(0);
+  const [startTime, setStartTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   useEffect(() => {
@@ -39,26 +38,28 @@ function Ajanotto() {
   };
 
   const handleStartTimer = () => {
-    if (selectedTeam && selectedTask) {
+    if (!isTimerRunning && selectedTeam && selectedTask) {
       setIsTimerRunning(true);
-    } else {
+      setStartTime(Date.now() - elapsedTime); // Aloita ajanlasku aiemmalta kohdalta
+    } else if (!selectedTeam || !selectedTask) {
       alert('Valitse ensin joukkue ja tehtävä aloittaaksesi ajanoton.');
     }
   };
 
   const handleStopTimer = () => {
     setIsTimerRunning(false);
+    setElapsedTime(Date.now() - startTime);
   };
 
   const handleSaveTime = () => {
-    const aika = `${minutes}:${seconds}:${centiseconds}`;
+    const formattedTime = formatTime(elapsedTime);
     //Tallenna aika tehtävä kohtaisesti
     fetch('http://localhost:8081/saveTime', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ joukkueNimi: selectedTeam, tehtava: selectedTask, aika: aika }), // Lisää valittu Joukkue ja tehtävä
+      body: JSON.stringify({ joukkueNimi: selectedTeam, tehtava: selectedTask, aika: formattedTime }), // Lisää valittu Joukkue ja tehtävä
     })
       .then(response => {
         if (!response.ok) {
@@ -74,30 +75,30 @@ function Ajanotto() {
   };
 
   const handleResetTimer = () => {
-    setMinutes(0);
-    setSeconds(0);
-    setCentiseconds(0);
+    setIsTimerRunning(false);
+    setStartTime(null);
+    setElapsedTime(0);
   };
 
   useEffect(() => {
     let intervalId;
     if (isTimerRunning) {
       intervalId = setInterval(() => {
-        setCentiseconds(prevCentiseconds => (prevCentiseconds + 1) % 100);
-        setSeconds(prevSeconds => {
-          if (prevSeconds === 59) {
-            setMinutes(prevMinutes => prevMinutes + 1);
-            return 0;
-          }
-          return prevSeconds + 1;
-        });
+        setElapsedTime(Date.now() - startTime);
       }, 10);
     } else {
       clearInterval(intervalId);
     }
 
     return () => clearInterval(intervalId);
-  }, [isTimerRunning]);
+  }, [isTimerRunning, startTime]);
+
+  const formatTime = (time) => {
+    const centiseconds = Math.floor((time / 10) % 100);
+    const seconds = Math.floor((time / 1000) % 60);
+    const minutes = Math.floor((time / 1000 / 60) % 60);
+    return `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}:${centiseconds < 10 ? '0' + centiseconds : centiseconds}`;
+  };
 
   return (
     <div className='container'>
@@ -116,13 +117,13 @@ function Ajanotto() {
           ))}
         </select>
         <div className='timer'>
-          <h2>{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}:{centiseconds < 10 ? `0${centiseconds}` : centiseconds}</h2>
+          <h2>{formatTime(elapsedTime)}</h2>
         </div>
         <button className='button1' onClick={handleStartTimer}>
-        <FontAwesomeIcon icon={faPlay} />
+          <FontAwesomeIcon icon={faPlay} />
         </button>
-          <button className='button' onClick={handleStopTimer}>
-        <FontAwesomeIcon icon={faStop} />
+        <button className='button' onClick={handleStopTimer}>
+          <FontAwesomeIcon icon={faStop} />
         </button>
         <button className='button' onClick={handleSaveTime}>
           <FontAwesomeIcon icon={faSave} />
@@ -136,15 +137,3 @@ function Ajanotto() {
 }
 
 export default Ajanotto;
-
-
-
-
-
-
-
-
-
-
-
-

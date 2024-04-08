@@ -8,6 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import AddContestants from './Pages/AddContestants';
 import { createBrowserRouter, RouterProvider, BrowserRouter} from 'react-router-dom';
 import Ajanotto from './Pages/Ajanotto';
+import Tulospalvelu from './Pages/Tulospalvelu';
 
 
 
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/Ajanotto",
     element: <Ajanotto/>
+  },
+  {
+    path: "/Tulospalvelu",
+    element: <Tulospalvelu/>
   },
   ])
 const root = ReactDOM.createRoot(document.getElementById('root'));

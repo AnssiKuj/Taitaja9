@@ -19,8 +19,8 @@ function FrontPage() {
               </Link>
             </div>
             <div className="tulospalvelu-container">
-              <Link to="Tulospalvelu">
-                <p>Tulospalvelu</p>
+              <Link to="/Tulospalvelu" className={`form-page-nav-block ${location.pathname === "/Tulospalvelu" ? "active" : ""}`}>
+                  <p>Tulospalvelu</p>
               </Link>
             </div>
         </div>

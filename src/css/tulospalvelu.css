@@ -1,0 +1,9 @@
+.info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .info span {
+    margin-bottom: 5px;
+  }
+  
