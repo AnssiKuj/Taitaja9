@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/contestant-container.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons'; // Lisätty faTimes rasti-ikonia varten
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function AddContestants() {
   const [data, setData] = useState([]);
