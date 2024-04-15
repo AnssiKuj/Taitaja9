@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/tulospalvelu.css"
 
-function AddContestants() {
+function Tulospalvelu() {
   const [data, setData] = useState([]);
   const location = useLocation();
 
@@ -35,4 +35,4 @@ function AddContestants() {
   );
 }
 
-export default AddContestants;
+export default Tulospalvelu;

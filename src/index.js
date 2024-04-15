@@ -5,7 +5,7 @@ import "./css/FrontPage.css";
 import "./css/containers.css"
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import AddContestants from './Pages/AddContestants';
+import AdminPage from './Pages/AdminPage';
 import { createBrowserRouter, RouterProvider, BrowserRouter} from 'react-router-dom';
 import Ajanotto from './Pages/Ajanotto';
 import Tulospalvelu from './Pages/Tulospalvelu';
@@ -19,8 +19,8 @@ const router = createBrowserRouter([
     element: <App/>
   },
   {
-    path: "/AddContestants",
-    element: <AddContestants/>
+    path: "/AdminPage",
+    element: <AdminPage/>
   },
   {
     path: "/Ajanotto",
