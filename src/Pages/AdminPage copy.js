@@ -13,7 +13,7 @@ function AddContestants() {
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.log(err));
-  }, []);
+  }, [data]); // Muutettu lisäämään riippuvuus datasta
 
   const addContestant = () => {
     if (data.length < 36) {
@@ -31,7 +31,7 @@ function AddContestants() {
               throw new Error('Network response was not ok');
             }
             console.log('Kilpailija lisätty onnistuneesti');
-            setData([...data, { JoukkueNimi: contestantName }]);
+            setData([...data, { JoukkueNimi: contestantName }]); // Päivitetty lisäämään uusi joukkue suoraan frontendin tilaan
           })
           .catch(error => {
             console.error('Virhe lisättäessä kilpailijaa', error);
@@ -52,6 +52,7 @@ function AddContestants() {
           throw new Error('Network response was not ok');
         }
         console.log('Joukkue poistettu onnistuneesti');
+        // Päivitetään data poistetun joukkueen jälkeen
         const updatedData = data.filter(item => item.JoukkueNimi !== joukkueNimi);
         setData(updatedData);
       })
@@ -61,43 +62,16 @@ function AddContestants() {
       });
   };
 
-  const shuffleTeams = () => {
-    const shuffledData = [...data];
-    for (let i = shuffledData.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledData[i], shuffledData[j]] = [shuffledData[j], shuffledData[i]];
-    }
-    setData(shuffledData);
-  };
-
-  const removeSlowest = () => {
-    fetch('http://localhost:8081/removeSlowest', {
-      method: 'DELETE'
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        console.log('Hitaimmat kilpailijat poistettu onnistuneesti');
-        // Päivitetään data poistettujen kilpailijoiden jälkeen
-        fetch('http://localhost:8081/joukkueet')
-          .then(res => res.json())
-          .then(data => setData(data))
-          .catch(err => console.log(err));
-      })
-      .catch(error => {
-        console.error('Virhe poistettaessa hitaimpia kilpailijoita', error);
-        alert('Virhe poistettaessa hitaimpia kilpailijoita.');
-      });
-  };
-
   return (
     <div className='container'>
       <div className='container1'>
         <h2 className="header" onClick={addContestant}>Lisää kilpailija</h2>
         <div className="kilpailija-container">
           {data.map((d, i) => (
-            <div key={i} className={`kilpailija-item`}>
+            <div
+              key={i}
+              className={`kilpailija-item`}
+            >
               {d.JoukkueNimi}
               <button className="delete-button" onClick={() => deleteContestant(d.JoukkueNimi)}>
                 <FontAwesomeIcon icon={faTrash} />
@@ -108,9 +82,7 @@ function AddContestants() {
       </div>
       <div className='container2'>
         <h2>Jaa joukkueet eriin</h2>
-        <button onClick={shuffleTeams}>Jaa ja sekoita</button>
-        <button onClick={removeSlowest}>Poista hitaimmat</button>
-      </div>
+    </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
           <h2>Edellinen</h2>
@@ -124,3 +96,13 @@ function AddContestants() {
 }
 
 export default AddContestants;
+
+
+
+
+
+
+
+
+
+
