@@ -51,23 +51,9 @@ app.post('/insertContestant', (req, res) => {
   });
 });
 
-// Poistetaan joukkue tietokannasta
-app.delete('/deleteContestant/:JoukkueNimi', (req, res) => {
-  const JoukkueNimi = req.params.JoukkueNimi;
-  const sql = "DELETE FROM joukkueet WHERE JoukkueNimi = ?";
-  db.query(sql, [JoukkueNimi], (err, result) => {
-    if (err) {
-      console.error("Virhe poistettaessa joukkuetta", err);
-      return res.status(500).json({ error: "Virhe poistettaessa joukkuetta" });
-    }
-    console.log("Joukkue poistettu onnistuneesti");
-    return res.status(200).json({ message: "Joukkue poistettu onnistuneesti" });
-  });
-});
-
-// Poista hitaimmat kilpailijat tietokannasta
+// Poistetaan hitaimmat joukkueet tietokannasta
 app.delete('/removeSlowest', (req, res) => {
-  const sql = "DELETE FROM joukkueet WHERE Tehtävä1 + Tehtävä2 + Tehtävä3 = (SELECT MIN(Tehtävä1 + Tehtävä2 + Tehtävä3) FROM joukkueet)";
+  const sql = "DELETE FROM joukkueet WHERE `Tehtävä 1` + `Tehtävä 2` + `Tehtävä 3` = (SELECT MIN(`Tehtävä 1` + `Tehtävä 2` + `Tehtävä 3`) FROM joukkueet)";
   db.query(sql, (err, result) => {
     if (err) {
       console.error("Virhe poistettaessa hitaimpia kilpailijoita", err);
@@ -75,20 +61,6 @@ app.delete('/removeSlowest', (req, res) => {
     }
     console.log("Hitaimmat kilpailijat poistettu onnistuneesti");
     return res.status(200).json({ message: "Hitaimmat kilpailijat poistettu onnistuneesti" });
-  });
-});
-
-// Tallennetaan aika tietokantaan
-app.post('/saveTime', (req, res) => {
-  const { joukkueNimi, tehtava, aika } = req.body;
-  const sql = `UPDATE joukkueet SET \`${tehtava}\` = ? WHERE JoukkueNimi = ?`;
-  db.query(sql, [aika, joukkueNimi], (err, result) => {
-    if (err) {
-      console.error("Virhe tallentaessa aikaa", err);
-      return res.status(500).json({ error: "Virhe tallentaessa aikaa" });
-    }
-    console.log("Aika tallennettu onnistuneesti");
-    return res.status(200).json({ message: "Aika tallennettu onnistuneesti" });
   });
 });
 
