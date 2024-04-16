@@ -9,39 +9,45 @@ function AddContestants() {
   const location = useLocation();
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     fetch('http://localhost:8081/joukkueet')
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.log(err));
-  }, []);
+  };
 
   const addContestant = () => {
     if (data.length < 36) {
       const contestantName = prompt("Syötä joukkueen nimi:");
+      const blockNumber = Math.floor(data.length / 6) + 1; // Lohkon laskeminen
       if (contestantName) {
         fetch('http://localhost:8081/insertContestant', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ JoukkueNimi: contestantName }),
+          body: JSON.stringify({ JoukkueNimi: contestantName, Lohko: blockNumber }), // Lisätty Lohko
         })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            console.log('Kilpailija lisätty onnistuneesti');
-            setData([...data, { JoukkueNimi: contestantName }]);
-          })
-          .catch(error => {
-            console.error('Virhe lisättäessä kilpailijaa', error);
-            alert('Virhe lisättäessä kilpailijaa.');
-          });
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          console.log('Kilpailija lisätty onnistuneesti');
+          fetchData(); // Päivitä data lisäämisen jälkeen
+        })
+        .catch(error => {
+          console.error('Virhe lisättäessä kilpailijaa', error);
+          alert('Virhe lisättäessä kilpailijaa.');
+        });
       }
     } else {
       alert('Maksimimäärä kilpailijoita saavutettu.');
     }
   };
+  
 
   const deleteContestant = (joukkueNimi) => {
     fetch(`http://localhost:8081/deleteContestant/${joukkueNimi}`, {
@@ -52,8 +58,7 @@ function AddContestants() {
           throw new Error('Network response was not ok');
         }
         console.log('Joukkue poistettu onnistuneesti');
-        const updatedData = data.filter(item => item.JoukkueNimi !== joukkueNimi);
-        setData(updatedData);
+        fetchData(); // Päivitä data poiston jälkeen
       })
       .catch(error => {
         console.error('Virhe poistettaessa joukkuetta', error);
@@ -71,10 +76,7 @@ function AddContestants() {
           throw new Error('Network response was not ok');
         }
         console.log('Hitain joukkue jokaisesta lohkosta poistettu onnistuneesti');
-        fetch('http://localhost:8081/joukkueet')
-          .then(res => res.json())
-          .then(data => setData(data))
-          .catch(err => console.log(err));
+        fetchData(); // Päivitä data poiston jälkeen
       })
       .catch(error => {
         console.error('Virhe poistettaessa hitainta joukkuetta lohkosta', error);
@@ -86,7 +88,7 @@ function AddContestants() {
   const divideTeamsIntoBlocks = () => {
     const blocks = {};
     data.forEach((team, index) => {
-      const blockName = `Lohko ${index % 6 + 1}`;
+      const blockName = `Lohko ${team.Lohko}`;
       if (!blocks[blockName]) {
         blocks[blockName] = [];
       }
@@ -132,7 +134,3 @@ function AddContestants() {
 }
 
 export default AddContestants;
-
-
-
-

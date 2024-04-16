@@ -39,9 +39,9 @@ app.get('/joukkueet', (req, res) => {
 
 // Lisätään kilpailija tietokantaan
 app.post('/insertContestant', (req, res) => {
-  const { JoukkueNimi } = req.body;
-  const sql = "INSERT INTO joukkueet (JoukkueNimi) VALUES (?)";
-  db.query(sql, [JoukkueNimi], (err, result) => {
+  const { JoukkueNimi, Lohko } = req.body; // Lisätty Lohko
+  const sql = "INSERT INTO joukkueet (JoukkueNimi, Lohko) VALUES (?, ?)"; // Lisätty Lohko
+  db.query(sql, [JoukkueNimi, Lohko], (err, result) => { // Lisätty Lohko
     if (err) {
       console.error("Virhe lisätessä kilpailijaa", err);
       return res.status(500).json({ error: "Virhe lisätessä kilpailijaa" });
@@ -50,6 +50,7 @@ app.post('/insertContestant', (req, res) => {
     return res.status(200).json({ message: "Kilpailija lisätty onnistuneesti" });
   });
 });
+
 
 // Poistetaan joukkue tietokannasta
 app.delete('/deleteContestant/:JoukkueNimi', (req, res) => {
