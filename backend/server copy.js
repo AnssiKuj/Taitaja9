@@ -92,33 +92,6 @@ app.post('/saveTime', (req, res) => {
   });
 });
 
-
-// Poista hitain joukkue jokaisesta lohkosta
-app.delete('/removeSlowestPerBlock', (req, res) => {
-  const sql = `
-    DELETE FROM joukkueet
-    WHERE JoukkueNimi IN (
-      SELECT joukkueet.JoukkueNimi
-      FROM (
-        SELECT JoukkueNimi,
-        ROW_NUMBER() OVER(PARTITION BY SUBSTRING_INDEX(JoukkueNimi, ' ', 1) ORDER BY Tehtävä\ 1 + Tehtävä\ 2 + Tehtävä\ 3 ASC) AS row_num
-        FROM joukkueet
-      ) AS joukkueet
-      WHERE row_num = 1
-    )
-  `;
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error("Virhe poistettaessa hitainta joukkuetta lohkosta", err);
-      return res.status(500).json({ error: "Virhe poistettaessa hitainta joukkuetta lohkosta" });
-    }
-    console.log("Hitain joukkue jokaisesta lohkosta poistettu onnistuneesti");
-    return res.status(200).json({ message: "Hitain joukkue jokaisesta lohkosta poistettu onnistuneesti" });
-  });
-});
-
-
-
 app.listen(8081, () => {
   console.log("Palvelin käynnistetty portissa 8081");
 });

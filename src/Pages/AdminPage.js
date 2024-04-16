@@ -71,24 +71,36 @@ function AddContestants() {
   };
 
   const removeSlowest = () => {
-    fetch('http://localhost:8081/removeSlowest', {
+    fetch('http://localhost:8081/removeSlowestPerBlock', {
       method: 'DELETE'
     })
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        console.log('Hitaimmat kilpailijat poistettu onnistuneesti');
-        // Päivitetään data poistettujen kilpailijoiden jälkeen
+        console.log('Hitain joukkue jokaisesta lohkosta poistettu onnistuneesti');
         fetch('http://localhost:8081/joukkueet')
           .then(res => res.json())
           .then(data => setData(data))
           .catch(err => console.log(err));
       })
       .catch(error => {
-        console.error('Virhe poistettaessa hitaimpia kilpailijoita', error);
-        alert('Virhe poistettaessa hitaimpia kilpailijoita.');
+        console.error('Virhe poistettaessa hitainta joukkuetta lohkosta', error);
+        alert('Virhe poistettaessa hitainta joukkuetta lohkosta.');
       });
+  };
+
+  // Jaa joukkueet lohkoihin ja nimetään lohkot
+  const divideTeamsIntoBlocks = () => {
+    const blocks = {};
+    data.forEach((team, index) => {
+      const blockName = `Lohko ${index % 6 + 1}`;
+      if (!blocks[blockName]) {
+        blocks[blockName] = [];
+      }
+      blocks[blockName].push(team);
+    });
+    return blocks;
   };
 
   return (
@@ -96,12 +108,17 @@ function AddContestants() {
       <div className='container1'>
         <h2 className="header" onClick={addContestant}>Lisää kilpailija</h2>
         <div className="kilpailija-container">
-          {data.map((d, i) => (
-            <div key={i} className={`kilpailija-item`}>
-              {d.JoukkueNimi}
-              <button className="delete-button" onClick={() => deleteContestant(d.JoukkueNimi)}>
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
+          {Object.entries(divideTeamsIntoBlocks()).map(([blockName, teams]) => (
+            <div key={blockName} className='lohko'>
+              <h3>{blockName}</h3>
+              {teams.map((team, i) => (
+                <div key={i} className={`kilpailija-item`}>
+                  {team.JoukkueNimi}
+                  <button className="delete-button" onClick={() => deleteContestant(team.JoukkueNimi)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -124,3 +141,6 @@ function AddContestants() {
 }
 
 export default AddContestants;
+
+
+

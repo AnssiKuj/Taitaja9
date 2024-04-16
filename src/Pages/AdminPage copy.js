@@ -13,7 +13,7 @@ function AddContestants() {
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.log(err));
-  }, [data]); // Muutettu lisäämään riippuvuus datasta
+  }, []);
 
   const addContestant = () => {
     if (data.length < 36) {
@@ -31,7 +31,7 @@ function AddContestants() {
               throw new Error('Network response was not ok');
             }
             console.log('Kilpailija lisätty onnistuneesti');
-            setData([...data, { JoukkueNimi: contestantName }]); // Päivitetty lisäämään uusi joukkue suoraan frontendin tilaan
+            setData([...data, { JoukkueNimi: contestantName }]);
           })
           .catch(error => {
             console.error('Virhe lisättäessä kilpailijaa', error);
@@ -52,7 +52,6 @@ function AddContestants() {
           throw new Error('Network response was not ok');
         }
         console.log('Joukkue poistettu onnistuneesti');
-        // Päivitetään data poistetun joukkueen jälkeen
         const updatedData = data.filter(item => item.JoukkueNimi !== joukkueNimi);
         setData(updatedData);
       })
@@ -62,27 +61,74 @@ function AddContestants() {
       });
   };
 
+  const shuffleTeams = () => {
+    const shuffledData = [...data];
+    for (let i = shuffledData.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledData[i], shuffledData[j]] = [shuffledData[j], shuffledData[i]];
+    }
+    setData(shuffledData);
+  };
+
+  const removeSlowest = () => {
+    fetch('http://localhost:8081/removeSlowest', {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log('Hitaimmat kilpailijat poistettu onnistuneesti');
+        // Päivitetään data poistettujen kilpailijoiden jälkeen
+        fetch('http://localhost:8081/joukkueet')
+          .then(res => res.json())
+          .then(data => setData(data))
+          .catch(err => console.log(err));
+      })
+      .catch(error => {
+        console.error('Virhe poistettaessa hitaimpia kilpailijoita', error);
+        alert('Virhe poistettaessa hitaimpia kilpailijoita.');
+      });
+  };
+
+  // Jaa joukkueet lohkoihin ja nimetään lohkot
+  const divideTeamsIntoBlocks = () => {
+    const blocks = {};
+    data.forEach((team, index) => {
+      const blockName = `Lohko ${index % 6 + 1}`;
+      if (!blocks[blockName]) {
+        blocks[blockName] = [];
+      }
+      blocks[blockName].push(team);
+    });
+    return blocks;
+  };
+
   return (
     <div className='container'>
       <div className='container1'>
         <h2 className="header" onClick={addContestant}>Lisää kilpailija</h2>
         <div className="kilpailija-container">
-          {data.map((d, i) => (
-            <div
-              key={i}
-              className={`kilpailija-item`}
-            >
-              {d.JoukkueNimi}
-              <button className="delete-button" onClick={() => deleteContestant(d.JoukkueNimi)}>
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
+          {Object.entries(divideTeamsIntoBlocks()).map(([blockName, teams]) => (
+            <div key={blockName} className='lohko'>
+              <h3>{blockName}</h3>
+              {teams.map((team, i) => (
+                <div key={i} className={`kilpailija-item`}>
+                  {team.JoukkueNimi}
+                  <button className="delete-button" onClick={() => deleteContestant(team.JoukkueNimi)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              ))}
             </div>
           ))}
         </div>
       </div>
       <div className='container2'>
         <h2>Jaa joukkueet eriin</h2>
-    </div>
+        <button onClick={shuffleTeams}>Jaa ja sekoita</button>
+        <button onClick={removeSlowest}>Poista hitaimmat</button>
+      </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
           <h2>Edellinen</h2>
@@ -96,13 +142,5 @@ function AddContestants() {
 }
 
 export default AddContestants;
-
-
-
-
-
-
-
-
 
 
