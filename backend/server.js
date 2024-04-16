@@ -96,16 +96,16 @@ app.post('/saveTime', (req, res) => {
 // Poista hitain joukkue jokaisesta lohkosta
 app.delete('/removeSlowestPerBlock', (req, res) => {
   const sql = `
-    DELETE FROM joukkueet
-    WHERE JoukkueNimi IN (
-      SELECT joukkueet.JoukkueNimi
-      FROM (
-        SELECT JoukkueNimi,
-        ROW_NUMBER() OVER(PARTITION BY SUBSTRING_INDEX(JoukkueNimi, ' ', 1) ORDER BY Tehtävä\ 1 + Tehtävä\ 2 + Tehtävä\ 3 ASC) AS row_num
-        FROM joukkueet
-      ) AS joukkueet
-      WHERE row_num = 1
-    )
+  DELETE FROM joukkueet
+  WHERE JoukkueNimi IN (
+    SELECT joukkueet.JoukkueNimi
+    FROM (
+      SELECT JoukkueNimi,
+      ROW_NUMBER() OVER(PARTITION BY SUBSTRING_INDEX(JoukkueNimi, ' ', 1) ORDER BY \`Tehtävä 1\` + \`Tehtävä 2\` + \`Tehtävä 3\` ASC) AS row_num
+      FROM joukkueet
+    ) AS joukkueet
+    WHERE row_num = 1
+  )
   `;
   db.query(sql, (err, result) => {
     if (err) {
