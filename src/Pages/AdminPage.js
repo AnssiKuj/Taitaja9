@@ -61,14 +61,6 @@ function AddContestants() {
       });
   };
 
-  const shuffleTeams = () => {
-    const shuffledData = [...data];
-    for (let i = shuffledData.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledData[i], shuffledData[j]] = [shuffledData[j], shuffledData[i]];
-    }
-    setData(shuffledData);
-  };
 
   const removeSlowest = () => {
     fetch('http://localhost:8081/removeSlowestPerBlock', {
@@ -125,7 +117,6 @@ function AddContestants() {
       </div>
       <div className='container2'>
         <h2>Jaa joukkueet eriin</h2>
-        <button onClick={shuffleTeams}>Jaa ja sekoita</button>
         <button onClick={removeSlowest}>Poista hitaimmat</button>
       </div>
       <div className="navbutton-container">

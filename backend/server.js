@@ -65,18 +65,6 @@ app.delete('/deleteContestant/:JoukkueNimi', (req, res) => {
   });
 });
 
-// Poistetaan hitaimmat joukkueet tietokannasta
-app.delete('/removeSlowest', (req, res) => {
-  const sql = "DELETE FROM joukkueet WHERE `Tehtävä 1` + `Tehtävä 2` + `Tehtävä 3` = (SELECT MIN(`Tehtävä 1` + `Tehtävä 2` + `Tehtävä 3`) FROM joukkueet)";
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error("Virhe poistettaessa hitaimpia kilpailijoita", err);
-      return res.status(500).json({ error: "Virhe poistettaessa hitaimpia kilpailijoita" });
-    }
-    console.log("Hitaimmat kilpailijat poistettu onnistuneesti");
-    return res.status(200).json({ message: "Hitaimmat kilpailijat poistettu onnistuneesti" });
-  });
-});
 
 // Tallennetaan aika tietokantaan
 app.post('/saveTime', (req, res) => {
@@ -91,33 +79,6 @@ app.post('/saveTime', (req, res) => {
     return res.status(200).json({ message: "Aika tallennettu onnistuneesti" });
   });
 });
-
-
-// Poista hitain joukkue jokaisesta lohkosta
-app.delete('/removeSlowestPerBlock', (req, res) => {
-  const sql = `
-    DELETE FROM joukkueet
-    WHERE JoukkueNimi IN (
-      SELECT joukkueet.JoukkueNimi
-      FROM (
-        SELECT JoukkueNimi,
-        ROW_NUMBER() OVER(PARTITION BY SUBSTRING_INDEX(JoukkueNimi, ' ', 1) ORDER BY CAST(Tehtävä1 AS DECIMAL(10, 2)) + CAST(Tehtävä2 AS DECIMAL(10, 2)) + CAST(Tehtävä3 AS DECIMAL(10, 2)) ASC) AS row_num
-        FROM joukkueet
-      ) AS joukkueet
-      WHERE row_num = 1
-    )
-  `;
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error("Virhe poistettaessa hitainta joukkuetta lohkosta", err);
-      return res.status(500).json({ error: "Virhe poistettaessa hitainta joukkuetta lohkosta" });
-    }
-    console.log("Hitain joukkue jokaisesta lohkosta poistettu onnistuneesti");
-    return res.status(200).json({ message: "Hitain joukkue jokaisesta lohkosta poistettu onnistuneesti" });
-  });
-});
-
-
 
 app.listen(8081, () => {
   console.log("Palvelin käynnistetty portissa 8081");
