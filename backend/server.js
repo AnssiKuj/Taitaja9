@@ -81,6 +81,55 @@ app.post('/saveTime', (req, res) => {
   });
 });
 
+
+// Tallennetaan kokonaisaika tietokantaan
+app.post('/saveTotalTime', (req, res) => {
+  const { joukkueNimi, kokonaisAika } = req.body;
+  const sql = "UPDATE joukkueet SET KokonaisAika = ? WHERE JoukkueNimi = ?";
+  db.query(sql, [kokonaisAika, joukkueNimi], (err, result) => {
+    if (err) {
+      console.error("Virhe tallentaessa kokonaisaikaa", err);
+      return res.status(500).json({ error: "Virhe tallentaessa kokonaisaikaa" });
+    }
+    console.log("Kokonaisaika tallennettu onnistuneesti");
+    return res.status(200).json({ message: "Kokonaisaika tallennettu onnistuneesti" });
+  });
+});
+
+// Poistetaan hitain joukkue
+app.post('/deleteSlowestTeam', (req, res) => {
+  const { bracketName } = req.body;
+  const bracketTeams = divideTeamsIntobrackets()[bracketName];
+  if (!bracketTeams || bracketTeams.length === 0) {
+    return res.status(400).json({ error: "Lohko on tyhjä tai sitä ei ole olemassa." });
+  }
+
+  let slowestTeamIndex = 0;
+  let slowestTimeInSeconds = Infinity;
+
+  // Etsi hitain joukkue ja tallenna sen indeksi ja aika sekunteina
+  bracketTeams.forEach((team, index) => {
+    const totalTime = calculateTotalTimeInSeconds(team);
+    if (totalTime < slowestTimeInSeconds) {
+      slowestTimeInSeconds = totalTime;
+      slowestTeamIndex = index;
+    }
+  });
+
+  // Poista hitain joukkue
+  const slowestTeam = bracketTeams[slowestTeamIndex];
+  const sql = "DELETE FROM joukkueet WHERE JoukkueNimi = ?";
+  db.query(sql, [slowestTeam.JoukkueNimi], (err, result) => {
+    if (err) {
+      console.error("Virhe poistettaessa hitainta joukkuetta", err);
+      return res.status(500).json({ error: "Virhe poistettaessa hitainta joukkuetta" });
+    }
+    console.log("Hitain joukkue poistettu onnistuneesti");
+    return res.status(200).json({ message: "Hitain joukkue poistettu onnistuneesti" });
+  });
+});
+
+
 app.listen(8081, () => {
   console.log("Palvelin käynnistetty portissa 8081");
 });

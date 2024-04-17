@@ -22,14 +22,14 @@ function AddContestants() {
   const addContestant = () => {
     if (data.length < 36) {
       const contestantName = prompt("Syötä joukkueen nimi:");
-      const blockNumber = Math.floor(data.length / 6) + 1; // Lohkon laskeminen
+      const bracketNumber = Math.floor(data.length / 6) + 1; // Lohkon laskeminen
       if (contestantName) {
         fetch('http://localhost:8081/insertContestant', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ JoukkueNimi: contestantName, Lohko: blockNumber }), // Lisätty Lohko
+          body: JSON.stringify({ JoukkueNimi: contestantName, Lohko: bracketNumber }), // Lisätty Lohko
         })
         .then(response => {
           if (!response.ok) {
@@ -48,7 +48,6 @@ function AddContestants() {
     }
   };
   
-
   const deleteContestant = (joukkueNimi) => {
     fetch(`http://localhost:8081/deleteContestant/${joukkueNimi}`, {
       method: 'DELETE'
@@ -66,45 +65,115 @@ function AddContestants() {
       });
   };
 
+  const calculateTotalTimeInSeconds = (team) => {
+    let totalSeconds = 0;
+    Object.keys(team).forEach(key => {
+      if (key.includes('Tehtävä')) {
+        const taskTime = team[key];
+        if (taskTime) {
+          const [minutes, seconds, hundredths] = taskTime.split(':').map(part => parseInt(part));
+          totalSeconds += minutes * 60 + seconds + hundredths / 100;
+        }
+      }
+    });
+    return totalSeconds;
+  };
 
-  const removeSlowest = () => {
-    fetch('http://localhost:8081/removeSlowestPerBlock', {
-      method: 'DELETE'
-    })
+  const calculateTotalTime = () => {
+    data.forEach(team => {
+      let totalMinutes = 0;
+      let totalSeconds = 0;
+      let totalHundredths = 0;
+      Object.keys(team).forEach(key => {
+        if (key.includes('Tehtävä')) {
+          const taskTime = team[key];
+          if (taskTime) {
+            const [minutes, seconds, hundredths] = taskTime.split(':').map(part => parseInt(part));
+            totalMinutes += minutes;
+            totalSeconds += seconds;
+            totalHundredths += hundredths;
+          }
+        }
+      });
+  
+      totalMinutes += Math.floor(totalSeconds / 60);
+      totalSeconds %= 60;
+      totalSeconds += Math.floor(totalHundredths / 100);
+      totalHundredths %= 100;
+  
+      const formattedTime = `${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}:${totalHundredths < 10 ? '0' + totalHundredths : totalHundredths}`;
+  
+      fetch('http://localhost:8081/saveTotalTime', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ joukkueNimi: team.JoukkueNimi, kokonaisAika: formattedTime }),
+      })
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        console.log('Hitain joukkue jokaisesta lohkosta poistettu onnistuneesti');
-        fetchData(); // Päivitä data poiston jälkeen
+        console.log('Kokonaisaika tallennettu onnistuneesti');
+        fetchData(); // Päivitä data tallennuksen jälkeen
       })
       .catch(error => {
-        console.error('Virhe poistettaessa hitainta joukkuetta lohkosta', error);
-        alert('Virhe poistettaessa hitainta joukkuetta lohkosta.');
+        console.error('Virhe tallentaessa kokonaisaikaa', error);
+        alert('Virhe tallentaessa kokonaisaikaa.');
       });
+    });
+  };
+  
+
+  const divideTeamsIntobrackets = () => {
+    const brackets = {};
+    data.forEach((team, index) => {
+      const bracketName = `Lohko ${team.Lohko}`;
+      if (!brackets[bracketName]) {
+        brackets[bracketName] = [];
+      }
+      brackets[bracketName].push(team);
+    });
+    return brackets;
   };
 
-  // Jaa joukkueet lohkoihin ja nimetään lohkot
-  const divideTeamsIntoBlocks = () => {
-    const blocks = {};
-    data.forEach((team, index) => {
-      const blockName = `Lohko ${team.Lohko}`;
-      if (!blocks[blockName]) {
-        blocks[blockName] = [];
+
+  const deleteSlowestTeamInBracket = () => {
+    const brackets = divideTeamsIntobrackets();
+    
+    Object.keys(brackets).forEach(bracketName => {
+      const bracketTeams = brackets[bracketName];
+      if (bracketTeams.length === 0) {
+        alert(`${bracketName} on tyhjä.`);
+        return;
       }
-      blocks[blockName].push(team);
+    
+      let slowestTeamIndex = 0;
+      let slowestTimeInSeconds = 0;
+    
+      bracketTeams.forEach((team, index) => {
+        const totalTime = calculateTotalTimeInSeconds(team);
+        if (totalTime > slowestTimeInSeconds) {
+          slowestTimeInSeconds = totalTime;
+          slowestTeamIndex = index;
+        }
+      });
+    
+      const slowestTeam = bracketTeams[slowestTeamIndex];
+      deleteContestant(slowestTeam.JoukkueNimi);
     });
-    return blocks;
   };
+  
+  
 
   return (
     <div className='container'>
       <div className='container1'>
         <h2 className="header" onClick={addContestant}>Lisää kilpailija</h2>
         <div className="kilpailija-container">
-          {Object.entries(divideTeamsIntoBlocks()).map(([blockName, teams]) => (
-            <div key={blockName} className='lohko'>
-              <h3>{blockName}</h3>
+          {Object.entries(divideTeamsIntobrackets()).map(([bracketName, teams]) => (
+            <div key={bracketName} className='lohko'>
+              <h3>{bracketName}</h3>
               {teams.map((team, i) => (
                 <div key={i} className={`kilpailija-item`}>
                   {team.JoukkueNimi}
@@ -119,7 +188,8 @@ function AddContestants() {
       </div>
       <div className='container2'>
         <h2>Jaa joukkueet eriin</h2>
-        <button onClick={removeSlowest}>Poista hitaimmat</button>
+        <button onClick={calculateTotalTime}>Laske kokonaisaika</button>
+        <button onClick={() => deleteSlowestTeamInBracket(Object.keys(divideTeamsIntobrackets())[0])}>Poista lohkon hitain</button>
       </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
@@ -134,3 +204,4 @@ function AddContestants() {
 }
 
 export default AddContestants;
+
