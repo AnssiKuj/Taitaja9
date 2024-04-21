@@ -7,6 +7,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 function AddContestants() {
   const [data, setData] = useState([]);
   const location = useLocation();
+  const [brackets, setBrackets] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -163,6 +164,23 @@ function AddContestants() {
       deleteContestant(slowestTeam.JoukkueNimi);
     });
   };
+
+  const updateBrackets = () => {
+    fetch('http://localhost:8081/updateBrackets', {
+      method: 'POST'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log('Uudet lohkot luotu onnistuneesti');
+        fetchData();
+      })
+      .catch(error => {
+        console.error('Virhe luotaessa uusia lohkoja', error);
+        alert('Virhe luotaessa uusia lohkoja.');
+      });
+  };
   
   
 
@@ -192,6 +210,7 @@ function AddContestants() {
           calculateTotalTime();
           deleteSlowestTeamInBracket(Object.keys(divideTeamsIntobrackets())[0]);
         }}>Poista hitain</h2>
+        <h2 className='header' onClick={updateBrackets}>Luo uudet lohkot</h2>
       </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
@@ -206,4 +225,5 @@ function AddContestants() {
 }
 
 export default AddContestants;
+
 

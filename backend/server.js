@@ -129,8 +129,35 @@ app.post('/deleteSlowestTeam', (req, res) => {
   });
 });
 
-
+//Päivittää lohkot uudestaan riippuen joukkueiden määrästä
+app.post('/updateBrackets', (req, res) => {
+  const sql = "SELECT * FROM joukkueet";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Virhe joukkueiden hakemisessa", err);
+      return res.status(500).json({ error: "Virhe joukkueiden hakemisessa" });
+    }
+    
+    result.forEach((team, index) => {
+      const teamName = team.JoukkueNimi;
+      const bracketNumber = Math.ceil((index + 1) / 6);
+      const updateSql = "UPDATE joukkueet SET Lohko = ? WHERE JoukkueNimi = ?";
+      
+      db.query(updateSql, [bracketNumber, teamName], (err, result) => {
+        if (err) {
+          console.error(`Virhe lohkon päivittämisessä joukkueelle ${teamName}`, err);
+          return res.status(500).json({ error: `Virhe lohkon päivittämisessä joukkueelle ${teamName}` });
+        }
+        console.log(`Lohko päivitetty onnistuneesti: ${bracketNumber} joukkueelle ${teamName}`);
+      });
+    });
+    
+    console.log(`Kaikkien joukkueiden lohkot päivitetty.`);
+    return res.status(200).json({ message: `Kaikkien joukkueiden lohkot päivitetty` });
+  });
+});
 
 app.listen(8081, () => {
   console.log("Palvelin käynnistetty portissa 8081");
 });
+
