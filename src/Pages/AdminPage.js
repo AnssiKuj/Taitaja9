@@ -187,9 +187,11 @@ function AddContestants() {
         </div>
       </div>
       <div className='container2'>
-        <h2>Jaa joukkueet eriin</h2>
-        <button onClick={calculateTotalTime}>Laske kokonaisaika</button>
-        <button onClick={() => deleteSlowestTeamInBracket(Object.keys(divideTeamsIntobrackets())[0])}>Poista lohkon hitain</button>
+
+        <h2 className='header' onClick={() => {
+          calculateTotalTime();
+          deleteSlowestTeamInBracket(Object.keys(divideTeamsIntobrackets())[0]);
+        }}>Poista hitain</h2>
       </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>

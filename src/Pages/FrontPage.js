@@ -15,12 +15,17 @@ function FrontPage() {
         <div className="links-container">
             <div className="ajanotto-container">
               <Link to="/AdminPage" className={`form-page-nav-block ${location.pathname === "/AdminPage" ? "active" : ""}`}>
-                  <p>Ajanotto</p>
+                  <p>Joukkueen luonti</p>
               </Link>
             </div>
             <div className="tulospalvelu-container">
               <Link to="/Tulospalvelu" className={`form-page-nav-block ${location.pathname === "/Tulospalvelu" ? "active" : ""}`}>
                   <p>Tulospalvelu</p>
+              </Link>
+            </div>
+            <div className="third-container">
+              <Link to="/Ajanotto" className={`form-page-nav-block ${location.pathname === "/Ajanotto" ? "active" : ""}`}>
+                  <p>Ajanotto</p>
               </Link>
             </div>
         </div>

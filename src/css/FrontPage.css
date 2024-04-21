@@ -1,79 +1,76 @@
+.FrontPage-container1 {
+  position: absolute;
+  top: 0;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 60%, var(--main-bg) 100%), url("../img/Taitaja9_background.png") no-repeat center top fixed;
+  background-size: contain;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.header {
+  margin-top: 20px;
+  font-size: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.links-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.ajanotto-container,
+.tulospalvelu-container,
+.third-container {
+  width: 33.33%; /* Muutettu 33% -> 33.33% varmistaaksesi tasan jaon */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px; /* Lisätty marginaali */
+}
+
+.ajanotto-container p,
+.tulospalvelu-container p,
+.third-container p {
+  color: var(--main-text);
+  font-size: 50px;
+}
+
+a {
+  text-decoration: none;
+}
+
+@media (max-width: 719px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 50vh;
+    align-items: center;
+  }
+
   .FrontPage-container1 {
     position: absolute;
-    top: 0;
-    bottom: 50%;
-    left: 0;
-    right: 0;
+    height: 30%;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 60%, var(--main-bg) 100%), url("../img/Taitaja9_background.png") no-repeat center top fixed;
     background-size: contain;
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  .header {
-    margin-top: 20px;
-    font-size: 30px;
-    text-align: center;
-    cursor: pointer;
+
+  .container2 {
+    height: 30%;
   }
-  
-  .links-container {
-    display: flex;
-    flex-direction: row;
+
+  .ajanotto-container,
+  .tulospalvelu-container,
+  .third-container {
     width: 100%;
-    height: 100%;
   }
-  
-  .ajanotto-container {
-    margin-top: 10px;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .tulospalvelu-container {
-    margin-top: 10px;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .ajanotto-container p {
-    color: var(--main-text);
-    font-size: 50px;
-  }
-  
-  .tulospalvelu-container p {
-    color: var(--main-text);
-    font-size: 50px;
-  }
-  a{
-    text-decoration: none;
-  }
-  @media (max-width: 719px) {
-    .container {
-      display: flex;
-      flex-direction: column;
-      height: 50vh;
-      align-items: center;
-    }
-  
-    .frontpage-container {
-      position: absolute;
-      height: 30%;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 60%, var(--main-bg) 100%), url("../img/Taitaja9_background.png") no-repeat center top fixed;
-      background-size: contain;
-      overflow-y: scroll;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-  
-    .frontpage-container2 {
-      height: 30%;
-    }
-  
-    .ajanotto-container,
-    .tulospalvelu-container {
-      width: 100%;
-    }
-  }
+}

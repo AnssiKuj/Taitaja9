@@ -12,7 +12,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "taitaja9"
+  database: "kilpailu"
 });
 
 // Tietokannan yhdistämisen testaus
@@ -128,6 +128,7 @@ app.post('/deleteSlowestTeam', (req, res) => {
     return res.status(200).json({ message: "Hitain joukkue poistettu onnistuneesti" });
   });
 });
+
 
 
 app.listen(8081, () => {

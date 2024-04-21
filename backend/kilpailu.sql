@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 05.04.2024 klo 15:51
+-- Generation Time: 21.04.2024 klo 15:28
 -- Palvelimen versio: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `taitaja9`
+-- Database: `kilpailu`
 --
 
 -- --------------------------------------------------------
@@ -29,9 +29,11 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `joukkueet` (
   `JoukkueNimi` varchar(255) NOT NULL,
-  `tehtava1` varchar(255) NOT NULL,
-  `tehtava2` varchar(255) NOT NULL,
-  `tehtava3` varchar(255) NOT NULL
+  `Tehtävä 1` varchar(255) NOT NULL,
+  `Tehtävä 2` varchar(255) NOT NULL,
+  `Tehtävä 3` varchar(255) NOT NULL,
+  `KokonaisAika` varchar(255) NOT NULL,
+  `Lohko` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 COMMIT;
 
