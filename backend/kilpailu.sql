@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 21.04.2024 klo 15:28
+-- Generation Time: 23.04.2024 klo 22:17
 -- Palvelimen versio: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,10 +24,55 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Rakenne taululle `finaali`
+--
+
+CREATE TABLE `finaali` (
+  `JoukkueNimi` varchar(255) NOT NULL,
+  `Tehtävä 1` varchar(255) NOT NULL,
+  `Tehtävä 2` varchar(255) NOT NULL,
+  `Tehtävä 3` varchar(255) NOT NULL,
+  `KokonaisAika` varchar(255) NOT NULL,
+  `Lohko` int(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Rakenne taululle `joukkueet`
 --
 
 CREATE TABLE `joukkueet` (
+  `JoukkueNimi` varchar(255) NOT NULL,
+  `Tehtävä 1` varchar(255) NOT NULL,
+  `Tehtävä 2` varchar(255) NOT NULL,
+  `Tehtävä 3` varchar(255) NOT NULL,
+  `KokonaisAika` varchar(255) NOT NULL,
+  `Lohko` int(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Rakenne taululle `kerailyerat`
+--
+
+CREATE TABLE `kerailyerat` (
+  `JoukkueNimi` varchar(255) NOT NULL,
+  `Tehtävä 1` varchar(255) NOT NULL,
+  `Tehtävä 2` varchar(255) NOT NULL,
+  `Tehtävä 3` varchar(255) NOT NULL,
+  `KokonaisAika` varchar(255) NOT NULL,
+  `Lohko` int(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Rakenne taululle `valiera`
+--
+
+CREATE TABLE `valiera` (
   `JoukkueNimi` varchar(255) NOT NULL,
   `Tehtävä 1` varchar(255) NOT NULL,
   `Tehtävä 2` varchar(255) NOT NULL,

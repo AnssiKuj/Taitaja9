@@ -55,6 +55,15 @@ app.get('/valiera', (req, res) => {
   });
 });
 
+// Haetaan data tietokannasta
+app.get('/finaali', (req, res) => {
+  const sql = "SELECT * FROM finaali";
+  db.query(sql, (err, data) => {
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
 // Lisätään kilpailija tietokantaan
 app.post('/insertContestant', (req, res) => {
   const { JoukkueNimi, Lohko } = req.body; // Lisätty Lohko
@@ -128,12 +137,62 @@ app.post('/saveFinalTime', (req, res) => {
     return res.status(200).json({ message: "Aika tallennettu välierien tietokantaan onnistuneesti" });
   });
 });
+// Tallennetaan aika välierien tietokantaan
+app.post('/saveFinaaliTime', (req, res) => {
+  const { joukkueNimi, tehtava, aika } = req.body;
+  // Muuta SQL-kysely vastaamaan välierien tietokantarakennetta
+  const sql = `UPDATE finaali SET \`${tehtava}\` = ? WHERE JoukkueNimi = ?`;
+  db.query(sql, [aika, joukkueNimi], (err, result) => {
+    if (err) {
+      console.error("Virhe tallentaessa aikaa välieriin", err);
+      return res.status(500).json({ error: "Virhe tallentaessa aikaa välieriin" });
+    }
+    console.log("Aika tallennettu välierien tietokantaan onnistuneesti");
+    return res.status(200).json({ message: "Aika tallennettu välierien tietokantaan onnistuneesti" });
+  });
+});
 
 
 // Tallennetaan kokonaisaika tietokantaan
 app.post('/saveTotalTime', (req, res) => {
   const { joukkueNimi, kokonaisAika } = req.body;
   const sql = "UPDATE joukkueet SET KokonaisAika = ? WHERE JoukkueNimi = ?";
+  db.query(sql, [kokonaisAika, joukkueNimi], (err, result) => {
+    if (err) {
+      console.error("Virhe tallentaessa kokonaisaikaa", err);
+      return res.status(500).json({ error: "Virhe tallentaessa kokonaisaikaa" });
+    }
+    console.log("Kokonaisaika tallennettu onnistuneesti");
+    return res.status(200).json({ message: "Kokonaisaika tallennettu onnistuneesti" });
+  });
+});
+app.post('/saveTotalTime2', (req, res) => {
+  const { joukkueNimi, kokonaisAika } = req.body;
+  const sql = "UPDATE kerailyerat SET KokonaisAika = ? WHERE JoukkueNimi = ?";
+  db.query(sql, [kokonaisAika, joukkueNimi], (err, result) => {
+    if (err) {
+      console.error("Virhe tallentaessa kokonaisaikaa", err);
+      return res.status(500).json({ error: "Virhe tallentaessa kokonaisaikaa" });
+    }
+    console.log("Kokonaisaika tallennettu onnistuneesti");
+    return res.status(200).json({ message: "Kokonaisaika tallennettu onnistuneesti" });
+  });
+});
+app.post('/saveTotalTime3', (req, res) => {
+  const { joukkueNimi, kokonaisAika } = req.body;
+  const sql = "UPDATE valiera SET KokonaisAika = ? WHERE JoukkueNimi = ?";
+  db.query(sql, [kokonaisAika, joukkueNimi], (err, result) => {
+    if (err) {
+      console.error("Virhe tallentaessa kokonaisaikaa", err);
+      return res.status(500).json({ error: "Virhe tallentaessa kokonaisaikaa" });
+    }
+    console.log("Kokonaisaika tallennettu onnistuneesti");
+    return res.status(200).json({ message: "Kokonaisaika tallennettu onnistuneesti" });
+  });
+});
+app.post('/saveTotalTime4', (req, res) => {
+  const { joukkueNimi, kokonaisAika } = req.body;
+  const sql = "UPDATE finaali SET KokonaisAika = ? WHERE JoukkueNimi = ?";
   db.query(sql, [kokonaisAika, joukkueNimi], (err, result) => {
     if (err) {
       console.error("Virhe tallentaessa kokonaisaikaa", err);
@@ -216,30 +275,6 @@ app.post('/moveToValiera', (req, res) => {
     }
     console.log("Voittajat siirretty välierään onnistuneesti");
     
-
-    const deleteSql = "DELETE FROM joukkueet WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM joukkueet GROUP BY Lohko)";
-    db.query(deleteSql, (deleteErr, deleteResult) => {
-      if (deleteErr) {
-        console.error("Virhe joukkueiden poistamisessa", deleteErr);
-        return res.status(500).json({ error: "Virhe joukkueiden poistamisessa" });
-      }
-      console.log("Joukkueet poistettu onnistuneesti");
-      return res.status(200).json({ message: "Voittajat siirretty välierään ja joukkueet poistettu onnistuneesti" });
-    });
-  });
-});
-
-
-app.post('/moveToValiera', (req, res) => {
-  const moveSql = "INSERT INTO valiera (JoukkueNimi, KokonaisAika) SELECT JoukkueNimi, KokonaisAika FROM joukkueet WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM joukkueet GROUP BY Lohko)";
-  db.query(moveSql, (moveErr, moveResult) => {
-    if (moveErr) {
-      console.error("Virhe siirrettäessä voittajia välierään", moveErr);
-      return res.status(500).json({ error: "Virhe siirrettäessä voittajia välierään" });
-    }
-    console.log("Voittajat siirretty välierään onnistuneesti");
-    
- 
     const deleteSql = "DELETE FROM joukkueet WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM joukkueet GROUP BY Lohko)";
     db.query(deleteSql, (deleteErr, deleteResult) => {
       if (deleteErr) {
@@ -262,8 +297,28 @@ app.post('/moveToValiera2', (req, res) => {
     }
     console.log("Voittajat siirretty välierään onnistuneesti");
     
-   
     const deleteSql = "DELETE FROM kerailyerat WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM kerailyerat GROUP BY Lohko)";
+    db.query(deleteSql, (deleteErr, deleteResult) => {
+      if (deleteErr) {
+        console.error("Virhe joukkueiden poistamisessa", deleteErr);
+        return res.status(500).json({ error: "Virhe joukkueiden poistamisessa" });
+      }
+      console.log("Joukkueet poistettu onnistuneesti");
+      return res.status(200).json({ message: "Voittajat siirretty välierään ja joukkueet poistettu onnistuneesti" });
+    });
+  });
+});
+
+app.post('/moveToValiera3', (req, res) => {
+  const moveSql = "INSERT INTO finaali (JoukkueNimi, KokonaisAika) SELECT JoukkueNimi, KokonaisAika FROM valiera WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM valiera GROUP BY Lohko)";
+  db.query(moveSql, (moveErr, moveResult) => {
+    if (moveErr) {
+      console.error("Virhe siirrettäessä voittajia välierään", moveErr);
+      return res.status(500).json({ error: "Virhe siirrettäessä voittajia välierään" });
+    }
+    console.log("Voittajat siirretty välierään onnistuneesti");
+    
+    const deleteSql = "DELETE FROM valiera WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM valiera GROUP BY Lohko)";
     db.query(deleteSql, (deleteErr, deleteResult) => {
       if (deleteErr) {
         console.error("Virhe joukkueiden poistamisessa", deleteErr);
@@ -301,6 +356,56 @@ app.delete('/deleteContestantAndMoveToValiera/:JoukkueNimi', (req, res) => {
   });
 });
 
+app.delete('/deleteContestantAndMoveToValiera2/:JoukkueNimi', (req, res) => {
+  const JoukkueNimi = req.params.JoukkueNimi;
+  
+  // Siirrä joukkue välieraan
+  const moveSql = "INSERT INTO valiera (JoukkueNimi, KokonaisAika) SELECT JoukkueNimi, KokonaisAika FROM kerailyerat WHERE JoukkueNimi = ?";
+  db.query(moveSql, [JoukkueNimi], (moveErr, moveResult) => {
+    if (moveErr) {
+      console.error("Virhe siirrettäessä joukkuetta välierään", moveErr);
+      return res.status(500).json({ error: "Virhe siirrettäessä joukkuetta välierään" });
+    }
+
+    // Jos siirto onnistui, poista joukkue nykyisestä taulusta
+    const deleteSql = "DELETE FROM kerailyerat WHERE JoukkueNimi = ?";
+    db.query(deleteSql, [JoukkueNimi], (deleteErr, deleteResult) => {
+      if (deleteErr) {
+        console.error("Virhe joukkueen poistamisessa", deleteErr);
+        return res.status(500).json({ error: "Virhe joukkueen poistamisessa" });
+      }
+
+      console.log("Joukkue poistettu ja siirretty välierään onnistuneesti");
+      return res.status(200).json({ message: "Joukkue poistettu ja siirretty välierään onnistuneesti" });
+    });
+  });
+});
+
+app.delete('/deleteContestantAndMoveToValiera3/:JoukkueNimi', (req, res) => {
+  const JoukkueNimi = req.params.JoukkueNimi;
+  
+  // Siirrä joukkue välieraan
+  const moveSql = "INSERT INTO finaali (JoukkueNimi, KokonaisAika) SELECT JoukkueNimi, KokonaisAika FROM valiera WHERE JoukkueNimi = ?";
+  db.query(moveSql, [JoukkueNimi], (moveErr, moveResult) => {
+    if (moveErr) {
+      console.error("Virhe siirrettäessä joukkuetta välierään", moveErr);
+      return res.status(500).json({ error: "Virhe siirrettäessä joukkuetta välierään" });
+    }
+
+    // Jos siirto onnistui, poista joukkue nykyisestä taulusta
+    const deleteSql = "DELETE FROM valiera WHERE JoukkueNimi = ?";
+    db.query(deleteSql, [JoukkueNimi], (deleteErr, deleteResult) => {
+      if (deleteErr) {
+        console.error("Virhe joukkueen poistamisessa", deleteErr);
+        return res.status(500).json({ error: "Virhe joukkueen poistamisessa" });
+      }
+
+      console.log("Joukkue poistettu ja siirretty välierään onnistuneesti");
+      return res.status(200).json({ message: "Joukkue poistettu ja siirretty välierään onnistuneesti" });
+    });
+  });
+});
+
 // Siirrä joukkueet keräilyerään ja poista ne nykyisestä taulusta
 app.post('/moveToCollectionRound', (req, res) => {
   const moveSql = "INSERT INTO kerailyerat (JoukkueNimi, KokonaisAika) SELECT JoukkueNimi, KokonaisAika FROM joukkueet WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM joukkueet GROUP BY Lohko)";
@@ -323,6 +428,94 @@ app.post('/moveToCollectionRound', (req, res) => {
     });
   });
 });
+
+app.post('/createBrackets', (req, res) => {
+  const sql = "SELECT * FROM kerailyerat";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Virhe joukkueiden hakemisessa", err);
+      return res.status(500).json({ error: "Virhe joukkueiden hakemisessa" });
+    }
+    
+    // Jaa joukkueet neljään lohkoon tasaisesti
+    const teamsPerBracket = Math.ceil(result.length / 4);
+    let bracketNumber = 1;
+    let teamsInCurrentBracket = 0;
+
+    const updateQueries = result.map((team, index) => {
+      const teamName = team.JoukkueNimi;
+      const updateSql = "UPDATE kerailyerat SET Lohko = ? WHERE JoukkueNimi = ?";
+      const bracket = Math.ceil((index + 1) / teamsPerBracket); // Lohkon määrittäminen
+
+      return new Promise((resolve, reject) => {
+        db.query(updateSql, [bracket, teamName], (err, result) => {
+          if (err) {
+            console.error(`Virhe lohkon päivittämisessä joukkueelle ${teamName}`, err);
+            reject(`Virhe lohkon päivittämisessä joukkueelle ${teamName}`);
+          } else {
+            console.log(`Lohko päivitetty onnistuneesti: ${bracket} joukkueelle ${teamName}`);
+            resolve();
+          }
+        });
+      });
+    });
+
+    Promise.all(updateQueries)
+      .then(() => {
+        console.log(`Kaikkien joukkueiden lohkot päivitetty.`);
+        return res.status(200).json({ message: `Kaikkien joukkueiden lohkot päivitetty` });
+      })
+      .catch(error => {
+        console.error("Virhe joukkueiden lohkojen päivittämisessä", error);
+        return res.status(500).json({ error: "Virhe joukkueiden lohkojen päivittämisessä" });
+      });
+  });
+});
+
+app.post('/createBrackets1', (req, res) => {
+  const sql = "SELECT * FROM valiera";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Virhe joukkueiden hakemisessa", err);
+      return res.status(500).json({ error: "Virhe joukkueiden hakemisessa" });
+    }
+    
+    // Jaa joukkueet neljään lohkoon tasaisesti
+    const teamsPerBracket = Math.ceil(result.length / 3);
+    let bracketNumber = 1;
+    let teamsInCurrentBracket = 0;
+
+    const updateQueries = result.map((team, index) => {
+      const teamName = team.JoukkueNimi;
+      const updateSql = "UPDATE valiera SET Lohko = ? WHERE JoukkueNimi = ?";
+      const bracket = Math.ceil((index + 1) / teamsPerBracket); // Lohkon määrittäminen
+
+      return new Promise((resolve, reject) => {
+        db.query(updateSql, [bracket, teamName], (err, result) => {
+          if (err) {
+            console.error(`Virhe lohkon päivittämisessä joukkueelle ${teamName}`, err);
+            reject(`Virhe lohkon päivittämisessä joukkueelle ${teamName}`);
+          } else {
+            console.log(`Lohko päivitetty onnistuneesti: ${bracket} joukkueelle ${teamName}`);
+            resolve();
+          }
+        });
+      });
+    });
+
+    Promise.all(updateQueries)
+      .then(() => {
+        console.log(`Kaikkien joukkueiden lohkot päivitetty.`);
+        return res.status(200).json({ message: `Kaikkien joukkueiden lohkot päivitetty` });
+      })
+      .catch(error => {
+        console.error("Virhe joukkueiden lohkojen päivittämisessä", error);
+        return res.status(500).json({ error: "Virhe joukkueiden lohkojen päivittämisessä" });
+      });
+  });
+});
+
+
 
 app.listen(8081, () => {
   console.log("Palvelin käynnistetty portissa 8081");

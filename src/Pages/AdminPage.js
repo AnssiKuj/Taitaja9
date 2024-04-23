@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/contestant-container.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 function AddContestants() {
   const [data, setData] = useState([]);
@@ -232,7 +232,7 @@ function AddContestants() {
                 <div key={i} className={`kilpailija-item`}>
                   {team.JoukkueNimi}
                   <button className="delete-button" onClick={() => deleteContestantAndMoveToValiera(team.JoukkueNimi)}>
-                    <FontAwesomeIcon icon={faTrash} />
+                    <FontAwesomeIcon icon={faCheck} />
                   </button>
                 </div>
               ))}
@@ -244,7 +244,6 @@ function AddContestants() {
 
         <h2 className='header' onClick={() => {
           calculateTotalTime();
-          //deleteSlowestTeamInBracket(Object.keys(divideTeamsIntobrackets())[0]);
         }}>Laske kokonaisaika</h2>
         <h2 className='header' onClick={moveToValiera}>Siirrä voittajat välierään</h2>
         <h2 className='header' onClick={moveToCollectionRound}>Siirrä joukkueet keräilyerään</h2>

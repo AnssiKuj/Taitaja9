@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/contestant-container.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 function KerailyErat() {
   const [data, setData] = useState([]);
@@ -20,24 +20,6 @@ function KerailyErat() {
       .catch(err => console.log(err));
   };
 
-  
-  
-  const deleteContestant = (joukkueNimi) => {
-    fetch(`http://localhost:8081/deleteContestant/${joukkueNimi}`, {
-      method: 'DELETE'
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        console.log('Joukkue poistettu onnistuneesti');
-        fetchData(); // Päivitä data poiston jälkeen
-      })
-      .catch(error => {
-        console.error('Virhe poistettaessa joukkuetta', error);
-        alert('Virhe poistettaessa joukkuetta.');
-      });
-  };
 
   const calculateTotalTimeInSeconds = (team) => {
     let totalSeconds = 0;
@@ -53,7 +35,7 @@ function KerailyErat() {
     return totalSeconds;
   };
 
-  const calculateTotalTime = () => {
+  const calculateTotalTime2 = () => {
     data.forEach(team => {
       let totalMinutes = 0;
       let totalSeconds = 0;
@@ -77,7 +59,7 @@ function KerailyErat() {
   
       const formattedTime = `${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}:${totalHundredths < 10 ? '0' + totalHundredths : totalHundredths}`;
   
-      fetch('http://localhost:8081/saveTotalTime', {
+      fetch('http://localhost:8081/saveTotalTime2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,33 +94,6 @@ function KerailyErat() {
   };
 
 
-  const deleteSlowestTeamInBracket = () => {
-    const brackets = divideTeamsIntobrackets();
-    
-    Object.keys(brackets).forEach(bracketName => {
-      const bracketTeams = brackets[bracketName];
-      if (bracketTeams.length === 0) {
-        alert(`${bracketName} on tyhjä.`);
-        return;
-      }
-    
-      let slowestTeamIndex = 0;
-      let slowestTimeInSeconds = 0;
-    
-      bracketTeams.forEach((team, index) => {
-        const totalTime = calculateTotalTimeInSeconds(team);
-        if (totalTime > slowestTimeInSeconds) {
-          slowestTimeInSeconds = totalTime;
-          slowestTeamIndex = index;
-        }
-      });
-    
-      const slowestTeam = bracketTeams[slowestTeamIndex];
-      deleteContestant(slowestTeam.JoukkueNimi);
-    });
-  };
-
-
   const moveToValiera2 = () => {
     fetch('http://localhost:8081/moveToValiera2', {
       method: 'POST'
@@ -157,8 +112,8 @@ function KerailyErat() {
   };
 
 
-  const deleteContestantAndMoveToValiera = (joukkueNimi) => {
-    fetch(`http://localhost:8081/deleteContestantAndMoveToValiera/${joukkueNimi}`, {
+  const deleteContestantAndMoveToValiera2 = (joukkueNimi) => {
+    fetch(`http://localhost:8081/deleteContestantAndMoveToValiera2/${joukkueNimi}`, {
       method: 'DELETE'
     })
       .then(response => {
@@ -174,6 +129,23 @@ function KerailyErat() {
       });
   };
 
+  const createBrackets = () => {
+    fetch('http://localhost:8081/createBrackets', {
+      method: 'POST'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log('Lohkot luotu onnistuneesti');
+        fetchData(); // Päivitä data lohkojen luomisen jälkeen
+      })
+      .catch(error => {
+        console.error('Virhe luotaessa lohkoja', error);
+        alert('Virhe luotaessa lohkoja.');
+      });
+  };
+
 
   return (
     <div className='container'>
@@ -186,8 +158,8 @@ function KerailyErat() {
               {teams.map((team, i) => (
                 <div key={i} className={`kilpailija-item`}>
                   {team.JoukkueNimi}
-                  <button className="delete-button" onClick={() => deleteContestantAndMoveToValiera(team.JoukkueNimi)}>
-                    <FontAwesomeIcon icon={faTrash} />
+                  <button className="delete-button" onClick={() => deleteContestantAndMoveToValiera2(team.JoukkueNimi)}>
+                  <FontAwesomeIcon icon={faCheck} />
                   </button>
                 </div>
               ))}
@@ -198,10 +170,10 @@ function KerailyErat() {
       <div className='container2'>
 
         <h2 className='header' onClick={() => {
-          calculateTotalTime();
+          calculateTotalTime2();
         }}>Laske kokonaisaika</h2>
         <h2 className='header' onClick={moveToValiera2}>Siirrä voittajat välierään</h2>
-        <button>Luo lohkot</button>
+        <button className="create-brackets-button" onClick={createBrackets}>Luo lohkot</button>
       </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>

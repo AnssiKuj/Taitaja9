@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/contestant-container.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-function KerailyErat() {
+function Finaali() {
   const [data, setData] = useState([]);
   const location = useLocation();
   const [brackets, setBrackets] = useState([]);
@@ -14,30 +13,12 @@ function KerailyErat() {
   }, []);
 
   const fetchData = () => {
-    fetch('http://localhost:8081/kerailyerat')
+    fetch('http://localhost:8081/finaali')
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.log(err));
   };
 
-  
-  
-  const deleteContestant = (joukkueNimi) => {
-    fetch(`http://localhost:8081/deleteContestant/${joukkueNimi}`, {
-      method: 'DELETE'
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        console.log('Joukkue poistettu onnistuneesti');
-        fetchData(); // Päivitä data poiston jälkeen
-      })
-      .catch(error => {
-        console.error('Virhe poistettaessa joukkuetta', error);
-        alert('Virhe poistettaessa joukkuetta.');
-      });
-  };
 
   const calculateTotalTimeInSeconds = (team) => {
     let totalSeconds = 0;
@@ -53,7 +34,7 @@ function KerailyErat() {
     return totalSeconds;
   };
 
-  const calculateTotalTime = () => {
+  const calculateTotalTime4 = () => {
     data.forEach(team => {
       let totalMinutes = 0;
       let totalSeconds = 0;
@@ -77,7 +58,7 @@ function KerailyErat() {
   
       const formattedTime = `${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}:${totalHundredths < 10 ? '0' + totalHundredths : totalHundredths}`;
   
-      fetch('http://localhost:8081/saveTotalTime', {
+      fetch('http://localhost:8081/saveTotalTime4', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +83,7 @@ function KerailyErat() {
   const divideTeamsIntobrackets = () => {
     const brackets = {};
     data.forEach((team, index) => {
-      const bracketName = `Lohko ${team.Lohko}`;
+      const bracketName = `Finalistit`;
       if (!brackets[bracketName]) {
         brackets[bracketName] = [];
       }
@@ -111,74 +92,10 @@ function KerailyErat() {
     return brackets;
   };
 
-
-  const deleteSlowestTeamInBracket = () => {
-    const brackets = divideTeamsIntobrackets();
-    
-    Object.keys(brackets).forEach(bracketName => {
-      const bracketTeams = brackets[bracketName];
-      if (bracketTeams.length === 0) {
-        alert(`${bracketName} on tyhjä.`);
-        return;
-      }
-    
-      let slowestTeamIndex = 0;
-      let slowestTimeInSeconds = 0;
-    
-      bracketTeams.forEach((team, index) => {
-        const totalTime = calculateTotalTimeInSeconds(team);
-        if (totalTime > slowestTimeInSeconds) {
-          slowestTimeInSeconds = totalTime;
-          slowestTeamIndex = index;
-        }
-      });
-    
-      const slowestTeam = bracketTeams[slowestTeamIndex];
-      deleteContestant(slowestTeam.JoukkueNimi);
-    });
-  };
-
-
-  const moveToValiera2 = () => {
-    fetch('http://localhost:8081/moveToValiera2', {
-      method: 'POST'
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        console.log('Voittajat siirretty välierään onnistuneesti');
-        fetchData();
-      })
-      .catch(error => {
-        console.error('Virhe siirrettäessä voittajia välierään', error);
-        alert('Virhe siirrettäessä voittajia välierään.');
-      });
-  };
-
-
-  const deleteContestantAndMoveToValiera = (joukkueNimi) => {
-    fetch(`http://localhost:8081/deleteContestantAndMoveToValiera/${joukkueNimi}`, {
-      method: 'DELETE'
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        console.log('Joukkue poistettu ja siirretty välierään onnistuneesti');
-        fetchData(); // Päivitä data poiston jälkeen
-      })
-      .catch(error => {
-        console.error('Virhe poistettaessa joukkuetta ja siirrettäessä välierään', error);
-        alert('Virhe poistettaessa joukkuetta ja siirrettäessä välierään.');
-      });
-  };
-
-
   return (
     <div className='container'>
       <div className='container1'>
-        <h2 className="header">keräilyerät</h2>
+        <h2 className="header">Finaali</h2>
         <div className="kilpailija-container">
           {Object.entries(divideTeamsIntobrackets()).map(([bracketName, teams]) => (
             <div key={bracketName} className='lohko'>
@@ -186,9 +103,6 @@ function KerailyErat() {
               {teams.map((team, i) => (
                 <div key={i} className={`kilpailija-item`}>
                   {team.JoukkueNimi}
-                  <button className="delete-button" onClick={() => deleteContestantAndMoveToValiera(team.JoukkueNimi)}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
                 </div>
               ))}
             </div>
@@ -198,17 +112,14 @@ function KerailyErat() {
       <div className='container2'>
 
         <h2 className='header' onClick={() => {
-          calculateTotalTime();
-          //deleteSlowestTeamInBracket(Object.keys(divideTeamsIntobrackets())[0]);
+          calculateTotalTime4();
         }}>Laske kokonaisaika</h2>
-        <h2 className='header' onClick={moveToValiera2}>Siirrä voittajat välierään</h2>
-        <button>Luo lohkot</button>
       </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
           <h2>Edellinen</h2>
         </Link>
-        <Link to="/ValiEra" className={`${location.pathname === "/ValiEra" ? "active" : ""}`}>
+        <Link to="/finaali" className={`${location.pathname === "/finaali" ? "active" : ""}`}>
           <h2>Seuraava</h2>
         </Link>
       </div>
@@ -216,6 +127,4 @@ function KerailyErat() {
   );
 }
 
-export default KerailyErat;
-
-
+export default Finaali;

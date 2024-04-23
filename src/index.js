@@ -11,6 +11,7 @@ import Ajanotto from './Pages/Ajanotto';
 import Tulospalvelu from './Pages/Tulospalvelu';
 import KerailyErat from './Pages/KerailyErat';
 import ValiEra from './Pages/ValiEra';
+import Finaali from './Pages/Finaali';
 
 
 
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/ValiEra",
     element: <ValiEra/>
+  },
+  {
+    path: "/Finaali",
+    element: <Finaali/>
   },
   ])
 const root = ReactDOM.createRoot(document.getElementById('root'));
