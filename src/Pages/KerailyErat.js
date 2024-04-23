@@ -150,7 +150,7 @@ function KerailyErat() {
   return (
     <div className='container'>
       <div className='container1'>
-        <h2 className="header">keräilyerät</h2>
+        <h2 className="header">Keräilyerät</h2>
         <div className="kilpailija-container">
           {Object.entries(divideTeamsIntobrackets()).map(([bracketName, teams]) => (
             <div key={bracketName} className='lohko'>
@@ -176,7 +176,7 @@ function KerailyErat() {
         <button className="create-brackets-button" onClick={createBrackets}>Luo lohkot</button>
       </div>
       <div className="navbutton-container">
-        <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
+        <Link to="/AdminPage" className={`${location.pathname === "/AdminPage" ? "active" : ""}`}>
           <h2>Edellinen</h2>
         </Link>
         <Link to="/ValiEra" className={`${location.pathname === "/ValiEra" ? "active" : ""}`}>

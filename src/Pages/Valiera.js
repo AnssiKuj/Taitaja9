@@ -178,7 +178,7 @@ function ValiEra() {
   return (
     <div className='container'>
       <div className='container1'>
-        <h2 className="header">keräilyerät</h2>
+        <h2 className="header">ValiEraälierä</h2>
         <div className="kilpailija-container">
           {Object.entries(divideTeamsIntobrackets()).map(([bracketName, teams]) => (
             <div key={bracketName} className='lohko'>
@@ -205,10 +205,10 @@ function ValiEra() {
         <button>Luo lohkot</button>
       </div>
       <div className="navbutton-container">
-        <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
+        <Link to="/Kerailyerat" className={`${location.pathname === "/Kerailyerat" ? "active" : ""}`}>
           <h2>Edellinen</h2>
         </Link>
-        <Link to="/KerailyErat" className={`${location.pathname === "/KerailyErat" ? "active" : ""}`}>
+        <Link to="/Finaali" className={`${location.pathname === "/Finaali" ? "active" : ""}`}>
           <h2>Seuraava</h2>
         </Link>
       </div>

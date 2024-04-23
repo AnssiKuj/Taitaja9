@@ -116,7 +116,7 @@ function Finaali() {
         }}>Laske kokonaisaika</h2>
       </div>
       <div className="navbutton-container">
-        <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
+        <Link to="/Valiera" className={`${location.pathname === "/Valiera" ? "active" : ""}`}>
           <h2>Edellinen</h2>
         </Link>
         <Link to="/finaali" className={`${location.pathname === "/finaali" ? "active" : ""}`}>
