@@ -4,7 +4,7 @@ import "../css/contestant-container.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-function AddContestants() {
+function KerailyErat() {
   const [data, setData] = useState([]);
   const location = useLocation();
   const [brackets, setBrackets] = useState([]);
@@ -14,40 +14,13 @@ function AddContestants() {
   }, []);
 
   const fetchData = () => {
-    fetch('http://localhost:8081/joukkueet')
+    fetch('http://localhost:8081/kerailyerat')
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.log(err));
   };
 
-  const addContestant = () => {
-    if (data.length < 36) {
-      const contestantName = prompt("Syötä joukkueen nimi:");
-      const bracketNumber = Math.floor(data.length / 6) + 1; // Lohkon laskeminen
-      if (contestantName) {
-        fetch('http://localhost:8081/insertContestant', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ JoukkueNimi: contestantName, Lohko: bracketNumber }), // Lisätty Lohko
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          console.log('Kilpailija lisätty onnistuneesti');
-          fetchData(); // Päivitä data lisäämisen jälkeen
-        })
-        .catch(error => {
-          console.error('Virhe lisättäessä kilpailijaa', error);
-          alert('Virhe lisättäessä kilpailijaa.');
-        });
-      }
-    } else {
-      alert('Maksimimäärä kilpailijoita saavutettu.');
-    }
-  };
+  
   
   const deleteContestant = (joukkueNimi) => {
     fetch(`http://localhost:8081/deleteContestant/${joukkueNimi}`, {
@@ -166,8 +139,8 @@ function AddContestants() {
   };
 
 
-  const moveToValiera = () => {
-    fetch('http://localhost:8081/moveToValiera', {
+  const moveToValiera2 = () => {
+    fetch('http://localhost:8081/moveToValiera2', {
       method: 'POST'
     })
       .then(response => {
@@ -202,28 +175,10 @@ function AddContestants() {
   };
 
 
-  const moveToCollectionRound = () => {
-    fetch('http://localhost:8081/moveToCollectionRound', {
-      method: 'POST'
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        console.log('Joukkueet siirretty keräilyerään onnistuneesti');
-        fetchData(); // Päivitä data siirron jälkeen
-      })
-      .catch(error => {
-        console.error('Virhe siirrettäessä joukkueita keräilyerään', error);
-        alert('Virhe siirrettäessä joukkueita keräilyerään.');
-      });
-  };
-  
-
   return (
     <div className='container'>
       <div className='container1'>
-        <h2 className="header" onClick={addContestant}>Lisää kilpailija</h2>
+        <h2 className="header">keräilyerät</h2>
         <div className="kilpailija-container">
           {Object.entries(divideTeamsIntobrackets()).map(([bracketName, teams]) => (
             <div key={bracketName} className='lohko'>
@@ -246,14 +201,14 @@ function AddContestants() {
           calculateTotalTime();
           //deleteSlowestTeamInBracket(Object.keys(divideTeamsIntobrackets())[0]);
         }}>Laske kokonaisaika</h2>
-        <h2 className='header' onClick={moveToValiera}>Siirrä voittajat välierään</h2>
-        <h2 className='header' onClick={moveToCollectionRound}>Siirrä joukkueet keräilyerään</h2>
+        <h2 className='header' onClick={moveToValiera2}>Siirrä voittajat välierään</h2>
+        <button>Luo lohkot</button>
       </div>
       <div className="navbutton-container">
         <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
           <h2>Edellinen</h2>
         </Link>
-        <Link to="/KerailyErat" className={`${location.pathname === "/KerailyErat" ? "active" : ""}`}>
+        <Link to="/ValiEra" className={`${location.pathname === "/ValiEra" ? "active" : ""}`}>
           <h2>Seuraava</h2>
         </Link>
       </div>
@@ -261,6 +216,6 @@ function AddContestants() {
   );
 }
 
-export default AddContestants;
+export default KerailyErat;
 
 

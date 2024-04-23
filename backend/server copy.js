@@ -206,7 +206,7 @@ app.post('/updateBrackets', (req, res) => {
 });
 
 
-
+// Modify the moveToValiera endpoint to move only the winners to "valiera" table
 app.post('/moveToValiera', (req, res) => {
   const moveSql = "INSERT INTO valiera (JoukkueNimi, KokonaisAika) SELECT JoukkueNimi, KokonaisAika FROM joukkueet WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM joukkueet GROUP BY Lohko)";
   db.query(moveSql, (moveErr, moveResult) => {
@@ -216,7 +216,7 @@ app.post('/moveToValiera', (req, res) => {
     }
     console.log("Voittajat siirretty välierään onnistuneesti");
     
-
+    // After moving to "valiera" table, delete teams from current table
     const deleteSql = "DELETE FROM joukkueet WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM joukkueet GROUP BY Lohko)";
     db.query(deleteSql, (deleteErr, deleteResult) => {
       if (deleteErr) {
@@ -239,7 +239,7 @@ app.post('/moveToValiera', (req, res) => {
     }
     console.log("Voittajat siirretty välierään onnistuneesti");
     
- 
+    // After moving to "valiera" table, delete teams from current table
     const deleteSql = "DELETE FROM joukkueet WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM joukkueet GROUP BY Lohko)";
     db.query(deleteSql, (deleteErr, deleteResult) => {
       if (deleteErr) {
@@ -262,7 +262,7 @@ app.post('/moveToValiera2', (req, res) => {
     }
     console.log("Voittajat siirretty välierään onnistuneesti");
     
-   
+    // After moving to "valiera" table, delete teams from current table
     const deleteSql = "DELETE FROM kerailyerat WHERE (Lohko, KokonaisAika) IN (SELECT Lohko, MIN(KokonaisAika) FROM kerailyerat GROUP BY Lohko)";
     db.query(deleteSql, (deleteErr, deleteResult) => {
       if (deleteErr) {

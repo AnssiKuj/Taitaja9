@@ -9,6 +9,9 @@ import AdminPage from './Pages/AdminPage';
 import { createBrowserRouter, RouterProvider, BrowserRouter} from 'react-router-dom';
 import Ajanotto from './Pages/Ajanotto';
 import Tulospalvelu from './Pages/Tulospalvelu';
+import KerailyErat from './Pages/KerailyErat';
+import ValiEra from './Pages/ValiEra';
+
 
 
 
@@ -29,6 +32,14 @@ const router = createBrowserRouter([
   {
     path: "/Tulospalvelu",
     element: <Tulospalvelu/>
+  },
+  {
+    path: "/KerailyErat",
+    element: <KerailyErat/>
+  },
+  {
+    path: "/ValiEra",
+    element: <ValiEra/>
   },
   ])
 const root = ReactDOM.createRoot(document.getElementById('root'));
