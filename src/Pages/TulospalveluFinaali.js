@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/tulospalvelu.css"
 
-function Tulospalvelu() {
+function TulospalveluFinaali() {
   const [data, setData] = useState([]);
   const location = useLocation();
 
   useEffect(() => {
-    fetch('http://localhost:8081/joukkueet')
+    fetch('http://localhost:8081/finaali')
       .then(res => res.json())
       .then(data => setData(data))
       .catch(err => console.log(err));
@@ -17,7 +17,7 @@ function Tulospalvelu() {
   return (
     <div className='container'>
       <div className='container1'>
-        <h2 className="header">Alkuerä</h2>
+        <h2 className="header">Finaali</h2>
         <div className="kilpailija-container">
         {data.map((d, i) => (
         <div key={i} className={`kilpailija-item`}>
@@ -33,10 +33,10 @@ function Tulospalvelu() {
         </div>
       </div>
       <div className="navbutton-container">
-        <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
+        <Link to="/TulospalveluVali" className={`${location.pathname === "/TulospalveluVali" ? "active" : ""}`}>
           <h2>Edellinen</h2>
         </Link>
-        <Link to="/TulospalveluKeraily" className={`${location.pathname === "/TulospalveluKeraily" ? "active" : ""}`}>
+        <Link to="/" className={`${location.pathname === "/" ? "active" : ""}`}>
           <h2>Seuraava</h2>
         </Link>
       </div>
@@ -44,4 +44,4 @@ function Tulospalvelu() {
   );
 }
 
-export default Tulospalvelu;
+export default TulospalveluFinaali;

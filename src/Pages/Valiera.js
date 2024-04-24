@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import "../css/contestant-container.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 function ValiEra() {
   const [data, setData] = useState([]);
@@ -139,8 +139,8 @@ function ValiEra() {
   };
 
 
-  const moveToValiera2 = () => {
-    fetch('http://localhost:8081/moveToValiera2', {
+  const moveToValiera3 = () => {
+    fetch('http://localhost:8081/moveToValiera3', {
       method: 'POST'
     })
       .then(response => {
@@ -157,8 +157,8 @@ function ValiEra() {
   };
 
 
-  const deleteContestantAndMoveToValiera = (joukkueNimi) => {
-    fetch(`http://localhost:8081/deleteContestantAndMoveToValiera/${joukkueNimi}`, {
+  const deleteContestantAndMoveToValiera3 = (joukkueNimi) => {
+    fetch(`http://localhost:8081/deleteContestantAndMoveToValiera3/${joukkueNimi}`, {
       method: 'DELETE'
     })
       .then(response => {
@@ -174,11 +174,28 @@ function ValiEra() {
       });
   };
 
+  const createBrackets1 = () => {
+    fetch('http://localhost:8081/createBrackets1', {
+      method: 'POST'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log('Lohkot luotu onnistuneesti');
+        fetchData(); // Päivitä data lohkojen luomisen jälkeen
+      })
+      .catch(error => {
+        console.error('Virhe luotaessa lohkoja', error);
+        alert('Virhe luotaessa lohkoja.');
+      });
+  };
+
 
   return (
     <div className='container'>
       <div className='container1'>
-        <h2 className="header">ValiEraälierä</h2>
+        <h2 className="header">Valierä</h2>
         <div className="kilpailija-container">
           {Object.entries(divideTeamsIntobrackets()).map(([bracketName, teams]) => (
             <div key={bracketName} className='lohko'>
@@ -186,8 +203,8 @@ function ValiEra() {
               {teams.map((team, i) => (
                 <div key={i} className={`kilpailija-item`}>
                   {team.JoukkueNimi}
-                  <button className="delete-button" onClick={() => deleteContestantAndMoveToValiera(team.JoukkueNimi)}>
-                    <FontAwesomeIcon icon={faTrash} />
+                  <button className="delete-button" onClick={() => deleteContestantAndMoveToValiera3(team.JoukkueNimi)}>
+                    <FontAwesomeIcon icon={faCheck} />
                   </button>
                 </div>
               ))}
@@ -201,8 +218,8 @@ function ValiEra() {
           calculateTotalTime();
           //deleteSlowestTeamInBracket(Object.keys(divideTeamsIntobrackets())[0]);
         }}>Laske kokonaisaika</h2>
-        <h2 className='header' onClick={moveToValiera2}>Siirrä voittajat välierään</h2>
-        <button>Luo lohkot</button>
+        <h2 className='header' onClick={moveToValiera3}>Siirrä voittajat finaaliin</h2>
+        <button className="create-brackets-button" onClick={createBrackets1}>Luo lohkot</button>
       </div>
       <div className="navbutton-container">
         <Link to="/Kerailyerat" className={`${location.pathname === "/Kerailyerat" ? "active" : ""}`}>

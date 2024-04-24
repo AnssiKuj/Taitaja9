@@ -12,6 +12,9 @@ import Tulospalvelu from './Pages/Tulospalvelu';
 import KerailyErat from './Pages/KerailyErat';
 import ValiEra from './Pages/ValiEra';
 import Finaali from './Pages/Finaali';
+import TulospalveluKeraily from './Pages/TulospalveluKeraily';
+import TulospalveluVali from './Pages/TulospalveluVali';
+import TulospalveluFinaali from './Pages/TulospalveluFinaali';
 
 
 
@@ -45,6 +48,18 @@ const router = createBrowserRouter([
   {
     path: "/Finaali",
     element: <Finaali/>
+  },
+  {
+    path: "/TulospalveluKeraily",
+    element: <TulospalveluKeraily/>
+  },
+  {
+    path: "/TulospalveluVali",
+    element: <TulospalveluVali/>
+  },
+  {
+    path: "/TulospalveluFinaali",
+    element: <TulospalveluFinaali/>
   },
   ])
 const root = ReactDOM.createRoot(document.getElementById('root'));
